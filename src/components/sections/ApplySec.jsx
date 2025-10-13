@@ -58,7 +58,7 @@ const ApplySec = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center py-20">
+    <section className="relative min-h-screen flex items-center py-12 md:py-16 lg:py-20">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -66,31 +66,31 @@ const ApplySec = () => {
           backgroundImage: 'url(/assets/apply.png)',
         }}
       >
-        {/* Dark Overlay 
-        <div className="absolute inset-0 bg-black/50"></div>*/}
+        {/* Optional: Dark Overlay for better mobile readability */}
+        <div className="absolute inset-0 bg-black/20 md:bg-black/10 lg:bg-transparent"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           
-          {/* LEFT SIDE - Empty space to show background image */}
+          {/* LEFT SIDE - Empty space to show background image on desktop */}
           <div className="hidden lg:block"></div>
 
           {/* RIGHT SIDE - Application Form */}
-          <div className="bg-white rounded-lg shadow-2xl p-8 md:p-10 max-w-md ml-auto">
+          <div className="bg-white rounded-lg shadow-2xl p-6 sm:p-8 md:p-10 w-full max-w-md mx-auto lg:ml-auto lg:mr-0">
             
             {/* Header */}
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-3">
                 Apply Now
               </h2>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm">
                 Work with a leading name in the chemical industry
               </p>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
               
               {/* Full Name */}
               <div>
@@ -101,24 +101,24 @@ const ApplySec = () => {
                   value={formData.fullName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
               {/* Mobile Number with Country Code */}
-              <div className="flex gap-3">
-                <div className="relative w-24">
+              <div className="flex gap-2 sm:gap-3">
+                <div className="relative w-20 sm:w-24 flex-shrink-0">
                   <select
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none bg-white cursor-pointer"
+                    className="w-full px-2 sm:px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none bg-white cursor-pointer text-sm sm:text-base"
                   >
                     {countryCodes.map(code => (
                       <option key={code} value={code}>{code}</option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  <ChevronDown className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-400 pointer-events-none" />
                 </div>
                 <input
                   type="tel"
@@ -127,7 +127,8 @@ const ApplySec = () => {
                   value={formData.mobile}
                   onChange={handleChange}
                   required
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  pattern="[0-9]{10}"
+                  className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
@@ -140,7 +141,7 @@ const ApplySec = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
@@ -153,7 +154,7 @@ const ApplySec = () => {
                   value={formData.resumeLink}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
@@ -166,7 +167,7 @@ const ApplySec = () => {
                   value={formData.jobId}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
@@ -179,9 +180,9 @@ const ApplySec = () => {
                   onChange={handleChange}
                   maxLength={250}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none placeholder-gray-400 text-sm sm:text-base"
                 />
-                <div className="absolute bottom-3 right-3 text-xs text-gray-400">
+                <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-xs text-gray-400">
                   {formData.description.length}/250
                 </div>
               </div>
@@ -191,7 +192,7 @@ const ApplySec = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-white border-2 border-gray-900 text-gray-900 py-3 rounded-full font-medium hover:bg-gray-900 hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-white border-2 border-gray-900 text-gray-900 py-2.5 sm:py-3 rounded-full font-medium hover:bg-gray-900 hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
@@ -200,16 +201,16 @@ const ApplySec = () => {
 
             {/* Success/Error Messages */}
             {submitStatus === 'success' && (
-              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
-                <p className="text-green-800 text-sm">
+              <div className="mt-4 md:mt-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-green-800 text-xs sm:text-sm">
                   Application submitted successfully! We'll get back to you soon.
                 </p>
               </div>
             )}
 
             {submitStatus === 'error' && (
-              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-red-800 text-sm">
+              <div className="mt-4 md:mt-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-red-800 text-xs sm:text-sm">
                   Something went wrong. Please try again later.
                 </p>
               </div>
