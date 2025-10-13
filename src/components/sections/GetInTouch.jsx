@@ -58,7 +58,7 @@ const GetInTouch = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center py-20">
+    <section className="relative min-h-screen flex items-center py-12 md:py-16 lg:py-20">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -66,28 +66,28 @@ const GetInTouch = () => {
           backgroundImage: 'url(https://res.cloudinary.com/dmrgscauc/image/upload/v1759748605/getintouch_l009zx.png)',
         }}
       >
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        {/* Overlay - Darker on mobile for better readability */}
+        <div className="absolute inset-0 bg-black/50 md:bg-black/40"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           
           {/* LEFT SIDE - Form */}
-          <div className="bg-white rounded-lg shadow-2xl p-8 md:p-10 max-w-md">
+          <div className="bg-white rounded-lg shadow-2xl p-6 sm:p-8 md:p-10 w-full max-w-md mx-auto lg:mx-0">
             
             {/* Header */}
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-3">
                 Get in touch
               </h2>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm">
                 Have any questions? Our team is ready to assist you.
               </p>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
               
               {/* Full Name */}
               <div>
@@ -98,24 +98,24 @@ const GetInTouch = () => {
                   value={formData.fullName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
               {/* Mobile Number with Country Code */}
-              <div className="flex gap-3">
-                <div className="relative w-24">
+              <div className="flex gap-2 sm:gap-3">
+                <div className="relative w-20 sm:w-24 flex-shrink-0">
                   <select
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleChange}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none bg-white cursor-pointer"
+                    className="w-full px-2 sm:px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none bg-white cursor-pointer text-sm sm:text-base"
                   >
                     {countryCodes.map(code => (
                       <option key={code} value={code}>{code}</option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  <ChevronDown className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-400 pointer-events-none" />
                 </div>
                 <input
                   type="tel"
@@ -124,7 +124,8 @@ const GetInTouch = () => {
                   value={formData.mobile}
                   onChange={handleChange}
                   required
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  pattern="[0-9]{10}"
+                  className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
@@ -137,11 +138,11 @@ const GetInTouch = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
-              {/* Inquiry Type - Regular Input (No Dropdown) */}
+              {/* Inquiry Type - Regular Input */}
               <div>
                 <input
                   type="text"
@@ -150,7 +151,7 @@ const GetInTouch = () => {
                   value={formData.inquiryType}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
 
@@ -163,9 +164,9 @@ const GetInTouch = () => {
                   onChange={handleChange}
                   maxLength={50}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none placeholder-gray-400"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none placeholder-gray-400 text-sm sm:text-base"
                 />
-                <div className="absolute bottom-3 right-3 text-xs text-gray-400">
+                <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-xs text-gray-400">
                   {formData.details.length}/50
                 </div>
               </div>
@@ -175,7 +176,7 @@ const GetInTouch = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-white border-2 border-gray-900 text-gray-900 py-3 rounded-full font-medium hover:bg-gray-900 hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-white border-2 border-gray-900 text-gray-900 py-2.5 sm:py-3 rounded-full font-medium hover:bg-gray-900 hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
@@ -184,16 +185,16 @@ const GetInTouch = () => {
 
             {/* Success/Error Messages */}
             {submitStatus === 'success' && (
-              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
-                <p className="text-green-800 text-sm">
+              <div className="mt-4 md:mt-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-md">
+                <p className="text-green-800 text-xs sm:text-sm">
                   Thank you for contacting us. Our team shall get in touch with you shortly.
                 </p>
               </div>
             )}
 
             {submitStatus === 'error' && (
-              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-red-800 text-sm">
+              <div className="mt-4 md:mt-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-red-800 text-xs sm:text-sm">
                   Oh no, something went wrong while submitting your request. Try again later.
                 </p>
               </div>
