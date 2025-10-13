@@ -111,20 +111,26 @@ const PressRelease = () => {
 
         .text-shadow-orange {
           color: white;
-          text-shadow: 8px 8px 0px #FF6A00;
+          text-shadow: 4px 4px 0px #FF6A00;
           letter-spacing: 0.05em;
         }
 
         .text-shadow-orange-small {
           color: white;
           text-shadow: 2px 2px 0px #FF6A00;
-          letter-spacing: 0.2em;
+          letter-spacing: 0.1em;
+        }
+
+        @media (min-width: 768px) {
+          .text-shadow-orange {
+            text-shadow: 8px 8px 0px #FF6A00;
+          }
         }
       `}</style>
 
-      {/* Hero Section - Full Viewport Height */}
+      {/* Hero Section - Responsive */}
       <section 
-        className="relative h-screen flex items-end overflow-hidden"
+        className="relative h-[70vh] sm:h-[80vh] md:h-screen flex items-end overflow-hidden"
         style={{
           backgroundImage: 'url(/assets/bg-press.jpg)',
           backgroundSize: 'cover',
@@ -140,14 +146,13 @@ const PressRelease = () => {
           }}
         ></div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pb-12 md:pb-16 lg:pb-20">
-          {/* Text without background box - directly on the background */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pb-8 sm:pb-12 md:pb-16 lg:pb-20">
           <div>
-            <p className="text-shadow-orange-small text-sm md:text-[38px] font-bold mb-4"
-               style={{ fontFamily: 'Arial, sans-serif',letterSpacing: '0.26em' }}>
+            <p className="text-shadow-orange-small text-xs sm:text-sm md:text-2xl lg:text-[38px] font-bold mb-2 sm:mb-4"
+               style={{ fontFamily: 'Arial, sans-serif', letterSpacing: '0.2em' }}>
               Newsroom
             </p>
-            <h1 className="text-shadow-orange text-5xl md:text-7xl lg:text-[144px] font-black leading-none"
+            <h1 className="text-shadow-orange text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-[144px] font-black leading-none"
                 style={{ fontFamily: 'Arial Black, sans-serif', fontWeight: 900 }}>
               Press<br />Releases
             </h1>
@@ -155,10 +160,10 @@ const PressRelease = () => {
         </div>
       </section>
 
-      {/* Press Release Cards Grid */}
-      <section className="py-16 bg-gray-50">
+      {/* Press Release Cards Grid - Responsive */}
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {pressReleases.map((release, index) => (
               <div
                 key={release.id}
@@ -167,7 +172,7 @@ const PressRelease = () => {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Image */}
-                <div className="h-48 overflow-hidden">
+                <div className="h-40 sm:h-48 overflow-hidden">
                   <img
                     src={release.image}
                     alt={release.title}
@@ -179,28 +184,28 @@ const PressRelease = () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   {/* Date & Location */}
-                  <div className="flex items-center text-sm text-gray-500 mb-3">
-                    <span>{release.location}</span>
-                    <span className="mx-2">|</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center text-xs sm:text-sm text-gray-500 mb-3 gap-1 sm:gap-0">
+                    <span className="font-medium">{release.location}</span>
+                    <span className="hidden sm:inline mx-2">|</span>
                     <span>{release.date}</span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold text-[#32405B] mb-3 line-clamp-2 group-hover:text-[#FF6A00] transition-colors duration-300">
+                  <h3 className="text-lg sm:text-xl font-bold text-[#32405B] mb-2 sm:mb-3 line-clamp-2 group-hover:text-[#FF6A00] transition-colors duration-300">
                     {release.title}
                   </h3>
 
                   {/* Excerpt */}
-                  <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                  <p className="text-gray-600 text-xs sm:text-sm line-clamp-2 mb-3 sm:mb-4">
                     {release.excerpt}
                   </p>
 
                   {/* Read More Link */}
-                  <div className="flex items-center text-[#FF6A00] font-semibold text-sm group-hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex items-center text-[#FF6A00] font-semibold text-xs sm:text-sm group-hover:translate-x-2 transition-transform duration-300">
                     Read More
-                    <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -211,27 +216,27 @@ const PressRelease = () => {
         </div>
       </section>
 
-      {/* Modal */}
+      {/* Modal - Responsive */}
       {selectedRelease && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4 animate-fadeIn"
+          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-2 sm:p-4 animate-fadeIn overflow-y-auto"
           onClick={closeModal}
         >
           <div 
-            className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden animate-slideUp relative"
+            className="bg-white rounded-lg max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] my-auto overflow-hidden animate-slideUp relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors duration-300"
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 bg-white rounded-full p-1.5 sm:p-2 shadow-lg hover:bg-gray-100 transition-colors duration-300"
             >
-              <X className="w-6 h-6 text-gray-700" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
             </button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 max-h-[90vh] overflow-y-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
               {/* Left Side - Image */}
-              <div className="h-full min-h-[400px] lg:min-h-full">
+              <div className="h-48 sm:h-64 lg:h-full lg:min-h-full">
                 <img
                   src={selectedRelease.image}
                   alt={selectedRelease.title}
@@ -243,31 +248,31 @@ const PressRelease = () => {
               </div>
 
               {/* Right Side - Content */}
-              <div className="p-8 lg:p-12 overflow-y-auto">
+              <div className="p-6 sm:p-8 lg:p-12 overflow-y-auto">
                 {/* Date & Location */}
-                <div className="flex items-center text-sm text-gray-500 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 gap-1 sm:gap-0">
                   <span className="font-semibold">{selectedRelease.location}</span>
-                  <span className="mx-2">|</span>
+                  <span className="hidden sm:inline mx-2">|</span>
                   <span>{selectedRelease.date}</span>
                 </div>
 
                 {/* Title */}
-                <h2 className="text-3xl md:text-4xl font-bold text-[#32405B] mb-6 leading-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#32405B] mb-4 sm:mb-6 leading-tight">
                   {selectedRelease.title}
                 </h2>
 
                 {/* Content */}
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-700 leading-relaxed mb-6">
+                <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+                  <p className="text-gray-700 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
                     {selectedRelease.content}
                   </p>
                   
                   {/* Additional content sections */}
-                  <div className="border-t border-gray-200 pt-6 mt-6">
-                    <h3 className="text-xl font-bold text-[#32405B] mb-3">
+                  <div className="border-t border-gray-200 pt-4 sm:pt-6 mt-4 sm:mt-6">
+                    <h3 className="text-lg sm:text-xl font-bold text-[#32405B] mb-2 sm:mb-3">
                       Key Highlights
                     </h3>
-                    <ul className="list-disc list-inside space-y-2 text-gray-700">
+                    <ul className="list-disc list-inside space-y-1.5 sm:space-y-2 text-gray-700 text-sm sm:text-base">
                       <li>Record-breaking attendance and participation</li>
                       <li>Showcase of cutting-edge technologies and innovations</li>
                       <li>Strong industry partnerships and collaborations</li>

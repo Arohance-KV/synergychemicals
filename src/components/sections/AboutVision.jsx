@@ -96,7 +96,7 @@ const AboutVision = () => {
 
   return (
     <section 
-      className="py-20 relative overflow-hidden"
+      className="py-12 md:py-16 lg:py-20 relative overflow-hidden"
       style={{
         backgroundImage: 'url(/assets/bg-contact.jpg)',
         backgroundSize: 'cover',
@@ -111,18 +111,18 @@ const AboutVision = () => {
         
         {/* Top Label with fade-in */}
         <div 
-          className={`text-center mb-6 transition-all duration-1000 ${
+          className={`text-center mb-4 md:mb-6 transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'
           }`}
         >
-          <span className="text-sm font-semibold text-gray-500 tracking-wider uppercase">
+          <span className="text-xs sm:text-sm font-semibold text-gray-500 tracking-wider uppercase">
             ABOUT US
           </span>
         </div>
 
         {/* Main Title with zoom-in */}
         <h2 
-          className={`text-4xl md:text-5xl font-bold text-[#32405B] text-center mb-6 max-w-4xl mx-auto leading-tight transition-all duration-1000 delay-200 ${
+          className={`text-3xl sm:text-4xl md:text-5xl font-bold text-[#32405B] text-center mb-4 md:mb-6 max-w-4xl mx-auto leading-tight px-4 transition-all duration-1000 delay-200 ${
             isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
           }`}
         >
@@ -131,7 +131,7 @@ const AboutVision = () => {
 
         {/* Subtitle Description with fade-in */}
         <p 
-          className={`text-gray-600 text-center text-base md:text-lg max-w-3xl mx-auto mb-16 leading-relaxed transition-all duration-1000 delay-400 ${
+          className={`text-gray-600 text-center text-sm sm:text-base md:text-lg max-w-3xl mx-auto mb-12 md:mb-16 leading-relaxed px-4 transition-all duration-1000 delay-400 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
@@ -139,10 +139,10 @@ const AboutVision = () => {
         </p>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
           
           {/* Left Column - Text Content with stagger animation */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {[
               "HRLink was established in 2009 as a U.S.-based software development & consulting company with development centers in Vietnam.",
               "Besides providing outsourcing services, HRLink has built and successfully launched its own software companies. The most notable companies with millions of users worldwide.",
@@ -151,7 +151,7 @@ const AboutVision = () => {
             ].map((text, index) => (
               <p 
                 key={index}
-                className={`text-gray-700 leading-relaxed transition-all duration-700 ${
+                className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
                   isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
                 }`}
                 style={{ transitionDelay: `${600 + index * 150}ms` }}
@@ -167,26 +167,24 @@ const AboutVision = () => {
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
             }`}
           >
-            <div className="space-y-4 group">
+            <div className="space-y-3 md:space-y-4 group">
               <div 
-                className="overflow-hidden rounded-lg shadow-lg transform transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105"
-                style={{ width: '332px', height: '372px' }}
+                className="overflow-hidden rounded-lg shadow-lg transform transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105 w-full max-w-[280px] sm:max-w-[332px] mx-auto"
               >
                 <img
                   src={founder.image}
                   alt={founder.name}
-                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
-                  style={{ width: '332px', height: '372px' }}
+                  className="w-full h-auto aspect-[332/372] object-cover transform transition-transform duration-700 group-hover:scale-110"
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/332x372?text=' + founder.name;
                   }}
                 />
               </div>
               <div className="text-center transform transition-all duration-500 group-hover:translate-y-1">
-                <h3 className="font-bold text-[#32405B] text-xl transition-colors duration-300 group-hover:text-[#FF6A00]">
+                <h3 className="font-bold text-[#32405B] text-lg sm:text-xl transition-colors duration-300 group-hover:text-[#FF6A00]">
                   {founder.name}
                 </h3>
-                <p className="text-gray-600 text-base">{founder.role}</p>
+                <p className="text-gray-600 text-sm sm:text-base">{founder.role}</p>
               </div>
             </div>
           </div>
@@ -195,20 +193,20 @@ const AboutVision = () => {
         {/* Stats Section with animated counters */}
         <div 
           ref={statsRef}
-          className={`bg-[#3D4A5C] rounded-3xl px-8 py-12 md:px-16 md:py-16 transition-all duration-1000 delay-800 ${
+          className={`bg-[#3D4A5C] rounded-2xl md:rounded-3xl px-6 py-10 sm:px-8 sm:py-12 md:px-16 md:py-16 transition-all duration-1000 delay-800 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 text-center">
             {stats.map((stat, index) => (
               <div 
                 key={index} 
-                className="space-y-2 transform transition-all duration-500 hover:scale-110 cursor-pointer"
+                className="space-y-1 md:space-y-2 transform transition-all duration-500 hover:scale-110 cursor-pointer"
               >
-                <h3 className="text-5xl md:text-6xl font-bold text-white transition-all duration-300 hover:text-[#FF6A00]">
+                <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white transition-all duration-300 hover:text-[#FF6A00]">
                   {startCounting ? `${stat.count}${stat.suffix}` : '0'}
                 </h3>
-                <p className="text-gray-300 text-lg">{stat.label}</p>
+                <p className="text-gray-300 text-base sm:text-lg">{stat.label}</p>
               </div>
             ))}
           </div>

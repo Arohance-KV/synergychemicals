@@ -4,8 +4,10 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 const ExploreChemistry = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(3);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
   const sectionRef = useRef(null);
-  const scrollContainerRef = useRef(null);
   const listRef = useRef(null);
 
   useEffect(() => {
@@ -27,6 +29,23 @@ const ExploreChemistry = () => {
         observer.unobserve(sectionRef.current);
       }
     };
+  }, []);
+
+  // Handle responsive items per view
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerView(1); // Mobile - show 1 card
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2); // Tablet - show 2 cards
+      } else {
+        setItemsPerView(3); // Desktop - show 3 cards
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const industries = [
@@ -86,7 +105,6 @@ const ExploreChemistry = () => {
     }
   ];
 
-  const itemsPerView = 3;
   const totalSlides = industries.length;
   const maxIndex = totalSlides - itemsPerView;
 
@@ -102,29 +120,55 @@ const ExploreChemistry = () => {
     }
   };
 
-  const getCardWidth = () => {
-    if (listRef.current) {
-      const containerWidth = listRef.current.offsetWidth;
-      return (containerWidth / itemsPerView);
-    }
-    return 0;
+  // Touch handlers for mobile swipe
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
   };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (isLeftSwipe && currentIndex < maxIndex) {
+      handleNext();
+    }
+    if (isRightSwipe && currentIndex > 0) {
+      handlePrevious();
+    }
+    
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
+  // Reset current index when items per view changes
+  useEffect(() => {
+    if (currentIndex > maxIndex) {
+      setCurrentIndex(Math.max(0, maxIndex));
+    }
+  }, [itemsPerView, maxIndex, currentIndex]);
 
   return (
     <section 
       ref={sectionRef}
-      className="py-16 bg-white overflow-hidden"
+      className="py-12 md:py-16 lg:py-20 bg-white overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className={`has-staggered-in ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="ui-product-cards-section__header mb-12">
-            <div className="flex items-center justify-between">
+        <div className={`has-staggered-in transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="mb-8 md:mb-12">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               
               {/* Title */}
               <h2 
-                className="text-3xl md:text-4xl font-normal transition-all duration-700"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal transition-all duration-700"
                 style={{ 
                   color: '#000',
                   opacity: isVisible ? 1 : 0,
@@ -135,57 +179,35 @@ const ExploreChemistry = () => {
               </h2>
 
               {/* Desktop Navigation - Above 1023px */}
-              <div className="hidden lg:flex items-center gap-3">
+              <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
                 <button
                   onClick={handlePrevious}
                   disabled={currentIndex === 0}
-                  className="m-btn-slider m-btn-slider--prev w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300"
+                  className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     borderColor: currentIndex === 0 ? '#BEBEC1' : '#5C5C64'
                   }}
                   aria-label="Previous card"
                 >
-                  <svg 
-                    className="m-btn-slider__icon w-5 h-5" 
-                    aria-hidden="true" 
-                    focusable="false" 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width="20" 
-                    height="20" 
-                    viewBox="0 0 20 20" 
-                    fill="none"
-                  >
-                    <path 
-                      d="M11.6667 14.7115L6.9552 10L11.6667 5.28857L12.5448 6.1667L8.71145 10L12.5448 13.8334L11.6667 14.7115Z" 
-                      fill={currentIndex === 0 ? '#BEBEC1' : '#5C5C64'}
-                    />
-                  </svg>
+                  <ChevronLeft 
+                    className="w-5 h-5" 
+                    color={currentIndex === 0 ? '#BEBEC1' : '#5C5C64'}
+                  />
                 </button>
                 
                 <button
                   onClick={handleNext}
                   disabled={currentIndex === maxIndex}
-                  className="m-btn-slider m-btn-slider--next w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300"
+                  className="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     borderColor: currentIndex === maxIndex ? '#BEBEC1' : '#5C5C64'
                   }}
                   aria-label="Next card"
                 >
-                  <svg 
-                    className="m-btn-slider__icon w-5 h-5" 
-                    aria-hidden="true" 
-                    focusable="false" 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width="20" 
-                    height="20" 
-                    viewBox="0 0 20 20" 
-                    fill="none"
-                  >
-                    <path 
-                      d="M10.7885 10L6.9552 6.1667L7.83333 5.28857L12.5448 10L7.83333 14.7115L6.9552 13.8334L10.7885 10Z" 
-                      fill={currentIndex === maxIndex ? '#BEBEC1' : '#5C5C64'}
-                    />
-                  </svg>
+                  <ChevronRight 
+                    className="w-5 h-5" 
+                    color={currentIndex === maxIndex ? '#BEBEC1' : '#5C5C64'}
+                  />
                 </button>
               </div>
             </div>
@@ -193,82 +215,71 @@ const ExploreChemistry = () => {
         </div>
 
         {/* Cards Container */}
-        <div className="ui-grid-card__list-wrapper has-staggered-in">
-          <div className="overflow-hidden" ref={listRef}>
+        <div className="relative">
+          <div 
+            className="overflow-hidden" 
+            ref={listRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <ul 
-              className="ui-grid-card__list is-visible flex transition-transform duration-500 ease-out"
+              className="flex transition-transform duration-500 ease-out"
               style={{
                 transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
-                gap: '1rem'
+                gap: itemsPerView === 1 ? '0' : '1.5rem'
               }}
             >
               {industries.map((industry, index) => (
                 <li
                   key={industry.id}
-                  className="ui-grid-card__list-item flex-shrink-0"
-                  slider-card=""
-                  aria-hidden={index < currentIndex || index >= currentIndex + itemsPerView ? "true" : "false"}
-                  tabIndex={index < currentIndex || index >= currentIndex + itemsPerView ? "-1" : "0"}
+                  className="flex-shrink-0"
                   style={{
-                    width: `calc((100% - ${(itemsPerView - 1)}rem) / ${itemsPerView})`
+                    width: itemsPerView === 1 
+                      ? '100%' 
+                      : `calc((100% - ${(itemsPerView - 1) * 1.5}rem) / ${itemsPerView})`,
+                    paddingLeft: itemsPerView === 1 && index > 0 ? '0.5rem' : '0',
+                    paddingRight: itemsPerView === 1 && index < industries.length - 1 ? '0.5rem' : '0'
                   }}
                 >
                   <div 
-                    className="ui-grid-card ui-grid-card--lg h-full"
+                    className="h-full"
                     style={{
                       opacity: isVisible ? 1 : 0,
                       transform: isVisible ? 'translateY(0)' : 'translateY(8px)',
                       transition: `all 700ms ease-out ${Math.min(index, 2) * 60}ms`
                     }}
                   >
-                    <div className="ui-product-card">
-                      <div className="ui-product-card__content">
+                    <div className="h-full flex flex-col shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-none">
+                      
+                      {/* Card Body - Fixed Height */}
+                      <div 
+                        className={`${industry.bgColor} p-6 md:p-8 lg:p-10 flex flex-col justify-between`} 
+                        style={{ height: '220px' }}
+                      >
+                        <h3 className="text-xl md:text-2xl lg:text-[28px] font-bold text-[#15274B] uppercase leading-tight">
+                          {industry.title}
+                        </h3>
                         
-                        {/* Card Body */}
-                        <div className={`ui-product-card__body ${industry.bgColor} p-8 flex flex-col justify-between`} style={{ minHeight: '200px' }}>
-                          <h3 className="ui-product-card__title text-[28px] font-[700] text-[#15274B] uppercase leading-tight mb-4">
-                            <a 
-                              href={industry.href}
-                            >
-                              {industry.title}
-                            </a>
-                          </h3>
-                          
-                          {/* Action Container */}
-                          <div className="ui-product-card__action-container">
-                            <div className="m-btn-primary-icon" aria-hidden="true">
-                              <div className="m-btn-primary-icon__icon-wrapper bg-[#15274B] rounded-full p-2.5 transition-colors duration-300 inline-block group">
-                                <svg 
-                                  className="m-btn-primary-icon__icon w-4 h-4" 
-                                  aria-hidden="true" 
-                                  focusable="false" 
-                                  xmlns="http://www.w3.org/2000/svg" 
-                                  width="16" 
-                                  height="16" 
-                                  viewBox="0 0 16 16" 
-                                  fill="none"
-                                >
-                                  <path 
-                                    d="M11.0847 8.5H3V7.5H11.0847L7.28717 3.7025L8 3L13 8L8 13L7.28717 12.2975L11.0847 8.5Z" 
-                                    fill="white"
-                                  />
-                                </svg>
-                              </div>
-                            </div>
+                        {/* Action Button */}
+                        <div className="flex justify-start mt-auto">
+                          <div className="bg-[#15274B] hover:bg-[#1e3a5f] rounded-full p-3 transition-all duration-300 cursor-pointer inline-flex items-center justify-center">
+                            <ArrowRight className="w-4 h-4 text-white" />
                           </div>
                         </div>
+                      </div>
 
-                        {/* Image Wrapper */}
-                        <div className="ui-product-card__img-wrapper img-reveal-rtl__wrapper img-reveal-rtl relative overflow-hidden" style={{ height: '280px' }}>
-                          <img 
-                            className="ui-product-card__img img-reveal-rtl__img is-loaded w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
-                            alt={industry.title}
-                            src={industry.image}
-                            width="421" 
-                            height="280"
-                            loading="lazy"
-                          />
-                        </div>
+                      {/* Image Section - Fixed Height */}
+                      <div 
+                        className="relative overflow-hidden" 
+                        style={{ height: '280px' }}
+                      >
+                        <img 
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
+                          alt={industry.title}
+                          src={industry.image}
+                          loading="lazy"
+                        />
                       </div>
                     </div>
                   </div>
@@ -278,70 +289,57 @@ const ExploreChemistry = () => {
           </div>
         </div>
 
-        {/* Mobile Footer - Below 1024px */}
-        <div className="ui-product-cards-section__footer is-below-1024 lg:hidden flex items-center justify-between mt-8">
-          
-          {/* Scroll Indicator */}
-          <div className="m-slider-scroll-indicator flex-1 mr-4" aria-hidden="true">
-            <div className="m-slider-scroll-indicator__track h-1 bg-gray-200 rounded-full relative">
+        {/* Mobile Navigation and Progress Indicator */}
+        <div className="lg:hidden mt-6 md:mt-8">
+          <div className="flex items-center justify-between gap-4">
+            
+            {/* Progress Bar */}
+            <div className="flex-1 h-1 bg-gray-200 rounded-full relative overflow-hidden">
               <div 
-                className="m-slider-scroll-indicator__thumb h-full bg-gray-400 rounded-full transition-all duration-300"
+                className="h-full bg-[#15274B] rounded-full transition-all duration-300"
                 style={{
-                  width: `${((currentIndex + itemsPerView) / totalSlides) * 100}%`
+                  width: `${((currentIndex + 1) / totalSlides) * 100}%`
                 }}
               />
             </div>
+
+            {/* Navigation Buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handlePrevious}
+                disabled={currentIndex === 0}
+                className="w-9 h-9 md:w-10 md:h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  borderColor: currentIndex === 0 ? '#BEBEC1' : '#5C5C64'
+                }}
+                aria-label="Previous card"
+              >
+                <ChevronLeft 
+                  className="w-4 h-4 md:w-5 md:h-5" 
+                  color={currentIndex === 0 ? '#BEBEC1' : '#5C5C64'}
+                />
+              </button>
+              
+              <button
+                onClick={handleNext}
+                disabled={currentIndex === maxIndex}
+                className="w-9 h-9 md:w-10 md:h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  borderColor: currentIndex === maxIndex ? '#BEBEC1' : '#5C5C64'
+                }}
+                aria-label="Next card"
+              >
+                <ChevronRight 
+                  className="w-4 h-4 md:w-5 md:h-5" 
+                  color={currentIndex === maxIndex ? '#BEBEC1' : '#5C5C64'}
+                />
+              </button>
+            </div>
           </div>
 
-          {/* Mobile Navigation */}
-          <div className="m-slider-nav flex items-center gap-3">
-            <button
-              onClick={handlePrevious}
-              disabled={currentIndex === 0}
-              className="m-btn-slider m-btn-slider--prev w-10 h-10 rounded-full border flex items-center justify-center"
-              style={{
-                borderColor: currentIndex === 0 ? '#BEBEC1' : '#5C5C64'
-              }}
-              aria-label="Previous card"
-            >
-              <svg 
-                className="m-btn-slider__icon w-5 h-5" 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="20" 
-                height="20" 
-                viewBox="0 0 20 20" 
-                fill="none"
-              >
-                <path 
-                  d="M11.6667 14.7115L6.9552 10L11.6667 5.28857L12.5448 6.1667L8.71145 10L12.5448 13.8334L11.6667 14.7115Z" 
-                  fill={currentIndex === 0 ? '#BEBEC1' : '#5C5C64'}
-                />
-              </svg>
-            </button>
-            
-            <button
-              onClick={handleNext}
-              disabled={currentIndex === maxIndex}
-              className="m-btn-slider m-btn-slider--next w-10 h-10 rounded-full border flex items-center justify-center"
-              style={{
-                borderColor: currentIndex === maxIndex ? '#BEBEC1' : '#5C5C64'
-              }}
-              aria-label="Next card"
-            >
-              <svg 
-                className="m-btn-slider__icon w-5 h-5" 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="20" 
-                height="20" 
-                viewBox="0 0 20 20" 
-                fill="none"
-              >
-                <path 
-                  d="M10.7885 10L6.9552 6.1667L7.83333 5.28857L12.5448 10L7.83333 14.7115L6.9552 13.8334L10.7885 10Z" 
-                  fill={currentIndex === maxIndex ? '#BEBEC1' : '#5C5C64'}
-                />
-              </svg>
-            </button>
+          {/* Page Counter */}
+          <div className="text-center mt-4 text-sm text-gray-600">
+            {currentIndex + 1} / {totalSlides}
           </div>
         </div>
 

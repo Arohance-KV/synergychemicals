@@ -160,12 +160,6 @@ const ServicesPage = () => {
     transition: { duration: 0.6, ease: "easeOut" }
   };
 
-  const scaleIn = {
-    initial: { opacity: 0, scale: 0.8 },
-    animate: { opacity: 1, scale: 1 },
-    transition: { duration: 0.5, ease: "easeOut" }
-  };
-
   const staggerContainer = {
     initial: {},
     animate: {
@@ -206,9 +200,9 @@ const ServicesPage = () => {
         transition={{ duration: 0.3 }}
       >
         <div className="min-h-screen bg-white">
-          {/* Hero Section with Parallax Effect */}
+          {/* Hero Section - Responsive */}
           <motion.div 
-            className="relative h-[400px] bg-cover bg-center overflow-hidden"
+            className="relative h-[300px] sm:h-[350px] md:h-[400px] bg-cover bg-center overflow-hidden"
             style={{
               backgroundImage: `url('${activeService.heroImage}')`
             }}
@@ -224,7 +218,7 @@ const ServicesPage = () => {
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.h1 
-                className="text-5xl md:text-6xl font-bold text-white text-center px-4"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center px-4"
                 style={{
                   textShadow: '2px 2px 8px rgba(249, 115, 22, 0.6), 4px 4px 12px rgba(249, 115, 22, 0.4), 0 0 20px rgba(249, 115, 22, 0.3)'
                 }}
@@ -249,20 +243,20 @@ const ServicesPage = () => {
             </div>
           </motion.div>
 
-          {/* Content Sections */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          {/* Content Sections - Responsive */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
             {activeService.sections.map((section, index) => {
               if (section.type === 'intro') {
                 return (
                   <motion.div 
                     key={index} 
-                    className="mb-16 text-center"
+                    className="mb-12 md:mb-16 text-center"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                   >
-                    <p className="text-lg text-gray-700 leading-relaxed max-w-4xl mx-auto">
+                    <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-4xl mx-auto">
                       {section.content}
                     </p>
                   </motion.div>
@@ -274,31 +268,30 @@ const ServicesPage = () => {
               return (
                 <motion.div 
                   key={index} 
-                  className={`mb-20 flex flex-col ${isImageRight ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 items-center`}
+                  className={`mb-16 md:mb-20 flex flex-col ${isImageRight ? 'md:flex-row' : 'md:flex-row-reverse'} gap-8 md:gap-12 items-center`}
                   initial="initial"
                   whileInView="animate"
                   viewport={{ once: true, margin: "-100px" }}
                   variants={staggerContainer}
                 >
-                  {/* Image Section with Hover Effect */}
+                  {/* Image Section */}
                   <motion.div 
-                    className="md:w-1/2"
+                    className="w-full md:w-1/2"
                     variants={isImageRight ? fadeInLeft : fadeInRight}
                   >
                     <motion.div 
-                      className="relative rounded-2xl overflow-hidden shadow-2xl group"
+                      className="relative rounded-xl md:rounded-2xl overflow-hidden shadow-xl md:shadow-2xl group"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.3 }}
                     >
                       <motion.img 
                         src={section.image} 
                         alt={section.title}
-                        className="w-full h-[400px] object-cover"
+                        className="w-full h-[250px] sm:h-[300px] md:h-[400px] object-cover"
                         initial={{ scale: 1.2 }}
                         whileInView={{ scale: 1 }}
                         transition={{ duration: 1.2, ease: "easeOut" }}
                       />
-                      {/* Animated Overlay */}
                       <motion.div 
                         className="absolute inset-0 bg-gradient-to-tr from-teal-900/20 to-transparent"
                         initial={{ opacity: 0 }}
@@ -310,11 +303,11 @@ const ServicesPage = () => {
 
                   {/* Text Section */}
                   <motion.div 
-                    className="md:w-1/2"
+                    className="w-full md:w-1/2"
                     variants={isImageRight ? fadeInRight : fadeInLeft}
                   >
                     <motion.h2 
-                      className="text-3xl md:text-4xl font-bold mb-6"
+                      className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6"
                       style={{ color: '#244D4D' }}
                       initial={{ opacity: 0, x: isImageRight ? 30 : -30 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -323,11 +316,11 @@ const ServicesPage = () => {
                     >
                       {section.title}
                     </motion.h2>
-                    <div className="space-y-4">
+                    <div className="space-y-3 md:space-y-4">
                       {section.content.map((paragraph, pIndex) => (
                         <motion.p 
                           key={pIndex}
-                          className="text-gray-700 leading-relaxed text-base"
+                          className="text-sm sm:text-base text-gray-700 leading-relaxed"
                           initial={{ opacity: 0, y: 20 }}
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
@@ -346,9 +339,9 @@ const ServicesPage = () => {
             })}
           </div>
 
-          {/* Related Products Section with Stagger Animation */}
+          {/* Related Products Section - FULLY RESPONSIVE */}
           <motion.div 
-            className="bg-gray-50 py-16"
+            className="bg-gray-50 py-12 md:py-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -356,7 +349,7 @@ const ServicesPage = () => {
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div 
-                className="space-y-4"
+                className="space-y-3 sm:space-y-4"
                 initial="initial"
                 whileInView="animate"
                 viewport={{ once: true }}
@@ -379,7 +372,7 @@ const ServicesPage = () => {
                 ].map((product, index) => (
                   <motion.div 
                     key={index}
-                    className="bg-white border border-gray-200 hover:shadow-lg transition-all duration-300 p-8 flex items-center justify-between group"
+                    className="bg-white border border-gray-200 hover:shadow-lg transition-all duration-300 p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group rounded-lg"
                     variants={{
                       initial: { opacity: 0, x: -50 },
                       animate: { 
@@ -396,8 +389,8 @@ const ServicesPage = () => {
                       transition: { duration: 0.2 }
                     }}
                   >
-                    <div className="flex items-center gap-12">
-                      {/* Logo with Pulse Animation */}
+                    <div className="flex items-center gap-4 sm:gap-8 md:gap-12 w-full sm:w-auto">
+                      {/* Logo */}
                       <motion.div 
                         className="flex-shrink-0"
                         whileHover={{ scale: 1.1 }}
@@ -406,14 +399,14 @@ const ServicesPage = () => {
                         <img 
                           src={product.logo} 
                           alt={product.name}
-                          className="h-20 w-auto object-contain"
+                          className="h-12 sm:h-16 md:h-20 w-auto object-contain"
                         />
                       </motion.div>
                       
                       {/* Product Info */}
                       <div>
                         <motion.h4 
-                          className="text-2xl font-bold text-gray-900 mb-1"
+                          className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-0.5 sm:mb-1"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.2 }}
@@ -421,7 +414,7 @@ const ServicesPage = () => {
                           {product.name}
                         </motion.h4>
                         <motion.p 
-                          className="text-gray-600 text-base"
+                          className="text-gray-600 text-sm sm:text-base"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.3 }}
@@ -431,15 +424,15 @@ const ServicesPage = () => {
                       </div>
                     </div>
                     
-                    {/* Learn More Button with Hover Animation */}
+                    {/* Learn More Button */}
                     <motion.button 
                       onClick={() => navigate('/products')}
-                      className="bg-[#1e293b] hover:bg-[#0f172a] text-white font-semibold px-8 py-3 transition-all duration-300 flex-shrink-0 relative overflow-hidden"
+                      className="w-full sm:w-auto bg-[#1e293b] hover:bg-[#0f172a] text-white font-semibold px-6 sm:px-8 py-2.5 sm:py-3 transition-all duration-300 flex-shrink-0 relative overflow-hidden rounded"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <motion.span
-                        className="relative z-10"
+                        className="relative z-10 text-sm sm:text-base"
                       >
                         Learn More
                       </motion.span>
