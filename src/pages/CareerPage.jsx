@@ -1,7 +1,7 @@
 // src/pages/CareersPage.jsx
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-import ApplySec from '../components/sections/applysec';
+import ApplySec from '../components/sections/ApplySec';
 
 const CareersPage = () => {
   const [expandedJob, setExpandedJob] = useState(null);
