@@ -195,7 +195,7 @@ const Footer = () => {
             <form onSubmit={handleSubmit} className="space-y-3">
               <input
                 type="email"
-                placeholder="kunalbhai@gmail.com"
+                placeholder="example@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={`w-full px-4 py-2.5 rounded-md ${theme.inputBg} border ${theme.inputBorder} ${theme.text} placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all`}

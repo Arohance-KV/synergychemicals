@@ -1,67 +1,35 @@
 // src/pages/ProductsPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  fetchAllProducts, 
+  selectAllProducts, 
+  selectProductLoading, 
+  selectProductError 
+} from '../redux/productSlice';
 import GetInTouch from '../components/sections/GetInTouch';
 
 const ProductsPage = () => {
   const [activeTab, setActiveTab] = useState('products');
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate= useNavigate();
-  // Products data
-  const products = [
-    {
-      id: 1,
-      name: 'SODA ASH',
-      code: '#12131',
-      image: '/assets/products/soda-ash.png',
-      category: 'Industrial Chemicals'
-    },
-    {
-      id: 2,
-      name: 'SODIUM BICARBONATE',
-      code: '#12131',
-      image: '/assets/products/sodium-bicarbonate.jpg',
-      category: 'Industrial Chemicals'
-    },
-    {
-      id: 3,
-      name: 'PRECIPITATE SILICA',
-      code: '#12131',
-      image: '/assets/products/precipitate-silica.png',
-      category: 'Specialty Chemicals'
-    },
-    {
-      id: 4,
-      name: 'FRUCTO- OLIGOSACCHARIDES',
-      code: '#12131',
-      image: '/assets/products/fructo-oligosaccharides.png',
-      category: 'Agricultural Solutions'
-    },
-    {
-      id: 5,
-      name: 'CEMENT',
-      code: '#12131',
-      image: '/assets/products/cement.png',
-      category: 'Construction'
-    },
-    {
-      id: 6,
-      name: 'NANO ZINC OXIDE',
-      code: '#12131',
-      image: '/assets/products/nano-zinc-oxide.jpg',
-      category: 'Specialty Chemicals'
-    },
-    {
-      id: 7,
-      name: 'ALLIED CHEMICALS',
-      code: '#12131',
-      image: '/assets/products/allied-chemicals.png',
-      category: 'Industrial Chemicals'
-    }
-  ];
+  const navigate = useNavigate();
+  
+  // Redux state
+  const dispatch = useDispatch();
+  const products = useSelector(selectAllProducts);
+  const loading = useSelector(selectProductLoading);
+  const error = useSelector(selectProductError);
 
-  // Industries data
+  // Fetch products on component mount
+  useEffect(() => {
+    if (activeTab === 'products') {
+      dispatch(fetchAllProducts());
+    }
+  }, [dispatch, activeTab]);
+
+  // Static industries data (since it's not from API)
   const industries = [
     {
       id: 1,
@@ -101,7 +69,21 @@ const ProductsPage = () => {
     }
   ];
 
-  const displayData = activeTab === 'products' ? products : industries;
+  // Transform API products to match component structure
+  const transformedProducts = products.map(product => ({
+    id: product._id,
+    name: product.name.replace(/"/g, ''), // Remove quotes from API
+    code: product.productCode.replace(/"/g, ''),
+    image: product.mainImage.url,
+    category: product.subheading?.replace(/"/g, '') || 'Product'
+  }));
+
+  const displayData = activeTab === 'products' ? transformedProducts : industries;
+
+  // Filter data based on search query
+  const filteredData = displayData.filter(item => 
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -114,7 +96,7 @@ const ProductsPage = () => {
           backgroundAttachment: 'fixed',
         }}
       >
-        {/* Overlay with 34% opacity - Changed from 90% to 34% */}
+        {/* Overlay */}
         <div 
           className="absolute inset-0 bg-white backdrop-blur-sm"
           style={{ opacity: 0.8 }}
@@ -173,16 +155,30 @@ const ProductsPage = () => {
             </div>
           </div>
 
+          {/* Loading State */}
+          {loading && activeTab === 'products' && (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FF6A00]"></div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && activeTab === 'products' && (
+            <div className="text-center py-20">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg inline-block">
+                <p className="font-semibold">Error loading products</p>
+                <p className="text-sm mt-1">{error}</p>
+              </div>
+            </div>
+          )}
+
           {/* Products/Industries Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayData
-              .filter(item => 
-                item.name.toLowerCase().includes(searchQuery.toLowerCase())
-              )
-              .map((item) => (
+          {!loading && !error && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredData.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => navigate(`/products/${item.name.toLowerCase().replace(/\s+/g, '-')}`)}
+                  onClick={() => navigate(`/products/${item.id}`)}
                   className="group cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
                 >
                   {/* Image */}
@@ -211,12 +207,11 @@ const ProductsPage = () => {
                   </div>
                 </div>
               ))}
-          </div>
+            </div>
+          )}
 
           {/* No Results */}
-          {displayData.filter(item => 
-            item.name.toLowerCase().includes(searchQuery.toLowerCase())
-          ).length === 0 && (
+          {!loading && !error && filteredData.length === 0 && (
             <div className="text-center py-20">
               <p className="text-gray-500 text-lg">
                 No results found for your search

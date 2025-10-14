@@ -1,14 +1,43 @@
 // src/pages/ProductDetailPage.jsx
-import React, { useState, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  fetchProductById, 
+  fetchAllProducts,
+  selectSelectedProduct, 
+  selectAllProducts,
+  selectProductLoading, 
+  selectProductError,
+  clearSelectedProduct 
+} from '../redux/productSlice';
 import GetInTouch from '../components/sections/GetInTouch';
 
 const ProductDetailPage = () => {
-  const { productSlug } = useParams();
+  const { productId } = useParams(); // Changed from productSlug to productId
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('application');
   const moreProductsRef = useRef(null);
+
+  // Redux state
+  const currentProduct = useSelector(selectSelectedProduct);
+  const allProducts = useSelector(selectAllProducts);
+  const loading = useSelector(selectProductLoading);
+  const error = useSelector(selectProductError);
+
+  // Fetch product by ID when component mounts or productId changes
+  useEffect(() => {
+    if (productId) {
+      dispatch(fetchProductById(productId));
+      dispatch(fetchAllProducts()); // Also fetch all products for "More Products" section
+    }
+
+    // Cleanup function to clear selected product when unmounting
+    return () => {
+      dispatch(clearSelectedProduct());
+    };
+  }, [dispatch, productId]);
 
   // Scroll to More Products section
   const scrollToMoreProducts = () => {
@@ -21,143 +50,75 @@ const ProductDetailPage = () => {
     }, 100);
   };
 
-  // All Products data (same as in ProductsPage)
-  const allProducts = [
-    {
-      id: 1,
-      name: 'SODA ASH',
-      code: '#12131',
-      slug: 'soda-ash',
-      image: '/assets/products/soda-ash.png',
-      category: 'Industrial Chemicals'
-    },
-    {
-      id: 2,
-      name: 'SODIUM BICARBONATE',
-      code: '#12131',
-      slug: 'sodium-bicarbonate',
-      image: '/assets/products/sodium-bicarbonate.jpg',
-      category: 'Industrial Chemicals'
-    },
-    {
-      id: 3,
-      name: 'PRECIPITATE SILICA',
-      code: '#12131',
-      slug: 'precipitate-silica',
-      image: '/assets/products/precipitate-silica.png',
-      category: 'Specialty Chemicals'
-    },
-    {
-      id: 4,
-      name: 'FRUCTO- OLIGOSACCHARIDES',
-      code: '#12131',
-      slug: 'fructo-oligosaccharides',
-      image: '/assets/products/fructo-oligosaccharides.png',
-      category: 'Agricultural Solutions'
-    },
-    {
-      id: 5,
-      name: 'CEMENT',
-      code: '#12131',
-      slug: 'cement',
-      image: '/assets/products/cement.png',
-      category: 'Construction'
-    },
-    {
-      id: 6,
-      name: 'NANO ZINC OXIDE',
-      code: '#12131',
-      slug: 'nano-zinc-oxide',
-      image: '/assets/products/nano-zinc-oxide.jpg',
-      category: 'Specialty Chemicals'
-    },
-    {
-      id: 7,
-      name: 'ALLIED CHEMICALS',
-      code: '#12131',
-      slug: 'allied-chemicals',
-      image: '/assets/products/allied-chemicals.png',
-      category: 'Industrial Chemicals'
-    }
-  ];
+  // Transform API products to match component structure
+  const transformedProducts = allProducts.map(product => ({
+    id: product._id,
+    name: product.name.replace(/"/g, ''),
+    code: product.productCode.replace(/"/g, ''),
+    image: product.mainImage.url,
+    category: product.subheading?.replace(/"/g, '') || 'Product'
+  }));
 
-  // Get current product based on slug
-  const currentProduct = allProducts.find(p => p.slug === productSlug) || allProducts[0];
+  // Filter out current product from more products section
+  const remainingProducts = transformedProducts.filter(p => p.id !== productId);
 
-  // Filter out current product to show remaining products
-  const remainingProducts = allProducts.filter(p => p.id !== currentProduct.id);
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FF6A00]"></div>
+      </div>
+    );
+  }
 
-  // Product detail data
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg inline-block">
+            <p className="font-semibold">Error loading product</p>
+            <p className="text-sm mt-1">{error}</p>
+            <button 
+              onClick={() => navigate('/products')}
+              className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Back to Products
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No product found
+  if (!currentProduct) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500 text-lg mb-4">Product not found</p>
+          <button 
+            onClick={() => navigate('/products')}
+            className="px-6 py-2 bg-[#32405B] text-white rounded hover:bg-[#FF6A00]"
+          >
+            Back to Products
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Transform current product data
   const product = {
-    name: currentProduct.name,
-    subtitle: 'Soda Ash is the common name for sodium carbonate (Na₂CO₃), a white, odourless, and stable powder that dissolves in water to form a slightly alkaline solution. Reliable and versatile, our Soda Ash range is a key raw material used across glass manufacturing, detergents, chemicals, and textiles. It is known for its consistent quality and purity.',
-    heroImage: currentProduct.image,
+    name: currentProduct.name.replace(/"/g, ''),
+    subtitle: currentProduct.description?.replace(/"/g, '') || 'Quality product for your needs',
+    heroImage: currentProduct.mainImage.url,
     applications: {
       title: 'Applications',
-      intro: 'Soda Ash is a fundamental industrial chemical known for its exceptional versatility across a wide spectrum of sectors. Its unique alkaline properties and ability to regulate pH make it indispensable in both manufacturing and processing environments. From enhancing product quality to improving operational efficiency, Soda Ash plays a critical role in driving innovation and sustainability across traditional and emerging industries.',
-      items: [
-        {
-          title: 'Chemical Production',
-          description: 'Soda Ash acts as a key raw material for manufacturing sodium-based chemicals like sodium silicates, phosphates, and percarbonates.'
-        },
-        {
-          title: 'Silicate manufacturing',
-          description: 'It is used to produce sodium silicate, essential in adhesives, detergents, and foundry moulds.'
-        },
-        {
-          title: 'Water softening',
-          description: 'It helps remove hardness in water by precipitating calcium and magnesium ions from water.'
-        },
-        {
-          title: 'Oil and gas drilling (fluids)',
-          description: 'It regulates the pH and reduces calcium levels in drilling fluids to prevent pipe scaling.'
-        },
-        {
-          title: 'pH regulation in pools',
-          description: 'Soda Ash maintains alkaline balance and stabilises pH levels in swimming pool water.'
-        },
-        {
-          title: 'Bentonite manufacturing',
-          description: 'Soda Ash can adjust the pH during activation of bentonite clay used in drilling and foundry applications.'
-        },
-        {
-          title: 'Metal smelting',
-          description: 'Used as a fluxing agent to remove impurities and improve metal recovery during smelting.'
-        },
-        {
-          title: 'Boiler descaling',
-          description: 'It helps neutralise acidic conditions and prevent scale buildup in boiler systems.'
-        },
-        {
-          title: 'Li-ion battery manufacturing',
-          description: 'Used in the production of lithium compounds critical for battery cathodes.'
-        },
-        {
-          title: 'Solar glass for PV module manufacturing',
-          description: 'Used for increasing clarity and chemical stability in low-iron solar glass panels.'
-        },
-        {
-          title: 'Glass manufacturing (flat glass)',
-          description: 'Soda Ash lowers the melting point and improves workability in float and sheet glass production.'
-        },
-        {
-          title: 'Glass manufacturing (bottles, containers)',
-          description: 'It enhances durability and clarity while optimising furnace performance.'
-        },
-        {
-          title: 'Ceramic production (glazes, durability)',
-          description: 'It acts as a flux to reduce firing temperature and improve surface finish in ceramics.'
-        },
-        {
-          title: 'Textile manufacturing (dyeing, fabric softening)',
-          description: 'Controls the pH during dyeing and improves the absorption of reactive dyes.'
-        },
-        {
-          title: 'Household cleaning products (detergents, abrasives)',
-          description: 'Provides alkalinity for effective cleaning and grease removal in soaps and detergents.'
-        }
-      ]
-    }
+      intro: currentProduct.description?.replace(/"/g, '') || '',
+      items: currentProduct.applications || []
+    },
+    bulletPoints: currentProduct.bulletPoints || []
   };
 
   return (
@@ -241,23 +202,47 @@ const ProductDetailPage = () => {
             </h2>
 
             {/* Introduction Text */}
-            <p className="text-gray-700 text-base mb-16 leading-relaxed max-w-5xl">
-              {product.applications.intro}
-            </p>
+            {product.applications.intro && (
+              <p className="text-gray-700 text-base mb-16 leading-relaxed max-w-5xl">
+                {product.applications.intro}
+              </p>
+            )}
 
             {/* Items Grid - 3 columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-              {product.applications.items.map((item, index) => (
-                <div key={index} className="border-b border-gray-200 pb-6">
-                  <h3 className="text-base font-bold text-[#32405B] mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {item.description}
-                  </p>
+            {product.applications.items.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                {product.applications.items.map((item, index) => (
+                  <div key={index} className="border-b border-gray-200 pb-6">
+                    <h3 className="text-base font-bold text-[#32405B] mb-3">
+                      {item.point}
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No applications available for this product.</p>
+            )}
+
+            {/* Bullet Points Section */}
+            {product.bulletPoints.length > 0 && (
+              <div className="mt-16">
+                <h2 className="text-3xl font-bold text-[#32405B] mb-6">Key Features</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
+                  {product.bulletPoints.map((bullet, index) => (
+                    <div key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-[#FF6A00] rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <div>
+                        <h4 className="font-bold text-[#32405B] mb-1">{bullet.point}</h4>
+                        <p className="text-gray-600 text-sm">{bullet.description}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -281,12 +266,15 @@ const ProductDetailPage = () => {
               </button>
             </div>
 
-            {/* Products Grid - All remaining products */}
+            {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {remainingProducts.map((prod) => (
                 <div
                   key={prod.id}
-                  onClick={() => navigate(`/products/${prod.slug}`)}
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                    navigate(`/products/${prod.id}`);
+                  }}
                   className="group cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
                 >
                   {/* Image */}
