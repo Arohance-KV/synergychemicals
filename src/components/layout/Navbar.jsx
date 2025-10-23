@@ -1,18 +1,21 @@
-// src/components/layout/Navbar.jsx
+// src/components/layout/Navbar.jsx (UPDATED: Use Redux for modal state)
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Menu, X, Search } from 'lucide-react';
 import useScrollPosition from '../../hooks/useScrollPosition';
 import { FaWhatsapp, FaGoogle, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import OtpModal from '../modals/OtpModal';
+import { setModalOpen, selectIsModalOpen } from '../../redux/otpSlice';  // NEW: Use Redux modal
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const { isScrolled } = useScrollPosition();
   const location = useLocation();
   const navigate = useNavigate();
+  const isOtpModalOpen = useSelector(selectIsModalOpen);  // NEW: From Redux
 
   // Scroll to top whenever route changes
   useEffect(() => {
@@ -45,15 +48,34 @@ const Navbar = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handle Products click - Open OTP Modal
+  // Helper to check if OTP is already verified
+  const isOtpVerified = () => {
+    return sessionStorage.getItem('otpVerified') === 'true';
+  };
+
+  // Helper to set OTP verified flag
+  const setOtpVerified = () => {
+    sessionStorage.setItem('otpVerified', 'true');
+  };
+
+  // Handle Products click - UPDATED: Use Redux dispatch
   const handleProductsClick = (e) => {
     e.preventDefault();
     setIsMenuOpen(false);
-    setIsOtpModalOpen(true);
+    
+    if (isOtpVerified()) {
+      console.log('OTP already verified, navigating directly to products');
+      navigate('/products');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      dispatch(setModalOpen(true));  // Open via Redux
+    }
   };
 
-  // Handle OTP Success - Navigate to Products
+  // Handle OTP Success - Navigate to Products + Set Flag
   const handleOtpSuccess = () => {
+    setOtpVerified();
+    dispatch(setModalOpen(false));  // Close via Redux
     navigate('/products');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -81,10 +103,10 @@ const Navbar = () => {
 
   return (
     <>
-      {/* OTP Modal */}
+      {/* OTP Modal - UPDATED: Use Redux state */}
       <OtpModal
         isOpen={isOtpModalOpen}
-        onClose={() => setIsOtpModalOpen(false)}
+        onClose={() => dispatch(setModalOpen(false))}
         onSuccess={handleOtpSuccess}
       />
 

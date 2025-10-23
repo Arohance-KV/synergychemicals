@@ -1,7 +1,6 @@
 // src/pages/ProductsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   fetchAllProducts, 
@@ -9,18 +8,28 @@ import {
   selectProductLoading, 
   selectProductError 
 } from '../redux/productSlice';
+import { 
+  fetchAllIndustries, 
+  selectAllIndustries, 
+  selectIndustryLoading, 
+  selectIndustryError 
+} from '../redux/industrySlice';
 import GetInTouch from '../components/sections/GetInTouch';
 
 const ProductsPage = () => {
   const [activeTab, setActiveTab] = useState('products');
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
-  
-  // Redux state
   const dispatch = useDispatch();
+
+  // Redux state for products
   const products = useSelector(selectAllProducts);
-  const loading = useSelector(selectProductLoading);
-  const error = useSelector(selectProductError);
+  const productLoading = useSelector(selectProductLoading);
+  const productError = useSelector(selectProductError);
+
+  // Redux state for industries
+  const industries = useSelector(selectAllIndustries);
+  const industryLoading = useSelector(selectIndustryLoading);
+  const industryError = useSelector(selectIndustryError);
 
   // Fetch products on component mount
   useEffect(() => {
@@ -29,56 +38,34 @@ const ProductsPage = () => {
     }
   }, [dispatch, activeTab]);
 
-  // Static industries data (since it's not from API)
-  const industries = [
-    {
-      id: 1,
-      name: 'PHARMACEUTICALS',
-      code: '#12131',
-      image: '/assets/products/sodium-bicarbonate.jpg'
-    },
-    {
-      id: 2,
-      name: 'AGRICULTURE',
-      code: '#12131',
-      image: '/assets/products/sodium-bicarbonate.jpg'
-    },
-    {
-      id: 3,
-      name: 'GLASS & CERAMICS',
-      code: '#12131',
-      image: '/assets/products/sodium-bicarbonate.jpg'
-    },
-    {
-      id: 4,
-      name: 'DETERGENTS',
-      code: '#12131',
-      image: '/assets/products/sodium-bicarbonate.jpg'
-    },
-    {
-      id: 5,
-      name: 'FOOD & BEVERAGES',
-      code: '#12131',
-      image: '/assets/products/sodium-bicarbonate.jpg'
-    },
-    {
-      id: 6,
-      name: 'TEXTILES',
-      code: '#12131',
-      image: '/assets/products/sodium-bicarbonate.jpg'
+  // Fetch industries when industries tab is active
+  useEffect(() => {
+    if (activeTab === 'industries') {
+      dispatch(fetchAllIndustries());
     }
-  ];
+  }, [dispatch, activeTab]);
 
   // Transform API products to match component structure
   const transformedProducts = products.map(product => ({
     id: product._id,
-    name: product.name.replace(/"/g, ''), // Remove quotes from API
+    name: product.name.replace(/"/g, ''),
     code: product.productCode.replace(/"/g, ''),
     image: product.mainImage.url,
     category: product.subheading?.replace(/"/g, '') || 'Product'
   }));
 
-  const displayData = activeTab === 'products' ? transformedProducts : industries;
+  // Transform API industries to match component structure
+  const transformedIndustries = industries.map(industry => ({
+    id: industry._id,
+    name: industry.name?.replace(/"/g, '') || industry.name,
+    code: industry.industryCode?.replace(/"/g, '') || '#IND',
+    image: industry.mainImage?.url || '/assets/products/sodium-bicarbonate.jpg',
+    category: industry.description?.replace(/"/g, '').substring(0, 50) || 'Industry'
+  }));
+
+  const displayData = activeTab === 'products' ? transformedProducts : transformedIndustries;
+  const loading = activeTab === 'products' ? productLoading : industryLoading;
+  const error = activeTab === 'products' ? productError : industryError;
 
   // Filter data based on search query
   const filteredData = displayData.filter(item => 
@@ -156,17 +143,17 @@ const ProductsPage = () => {
           </div>
 
           {/* Loading State */}
-          {loading && activeTab === 'products' && (
+          {loading && (
             <div className="flex justify-center items-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FF6A00]"></div>
             </div>
           )}
 
           {/* Error State */}
-          {error && activeTab === 'products' && (
+          {error && !loading && (
             <div className="text-center py-20">
               <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg inline-block">
-                <p className="font-semibold">Error loading products</p>
+                <p className="font-semibold">Error loading {activeTab}</p>
                 <p className="text-sm mt-1">{error}</p>
               </div>
             </div>
@@ -178,7 +165,6 @@ const ProductsPage = () => {
               {filteredData.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => navigate(`/products/${item.id}`)}
                   className="group cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
                 >
                   {/* Image */}

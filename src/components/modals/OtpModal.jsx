@@ -1,5 +1,5 @@
 // src/components/modals/OtpModal.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { X } from 'lucide-react';
 import { 
@@ -26,41 +26,56 @@ const OtpModal = ({ isOpen, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    phone: '' // Only digits, +91 added automatically
+    phone: ''
   });
   const [otp, setOtp] = useState('');
   const [otpInputs, setOtpInputs] = useState(['', '', '', '', '', '']);
 
-  // Handle OTP verification success
-  useEffect(() => {
-    if (verifySuccess === true) {
-      setTimeout(() => {
-        onSuccess();
-        handleClose();
-      }, 500);
-    }
-  }, [verifySuccess, onSuccess]);
-
-  // Auto-move to OTP step after successful submission
-  useEffect(() => {
-    if (submitData && step === 1) {
-      setStep(2);
-    }
-  }, [submitData, step]);
-
-  const handleClose = () => {
+  // Stable handleClose using useCallback
+  const handleClose = useCallback(() => {
     setStep(1);
     setFormData({ firstName: '', lastName: '', phone: '' });
     setOtp('');
     setOtpInputs(['', '', '', '', '', '']);
     dispatch(clearOtpState());
     onClose();
-  };
+  }, [dispatch, onClose]);
+
+  // Stable success handler using useCallback (UPDATED: Clear state after onSuccess)
+  const handleSuccessNavigation = useCallback(() => {
+    console.log('OTP Verified Successfully! Navigating to products...');
+    
+    // Call the onSuccess callback to navigate and close modal
+    if (onSuccess) {
+      onSuccess();
+    }
+    
+    // Clear Redux state shortly after (prevents re-triggers; brief delay for success msg flash)
+    setTimeout(() => {
+      dispatch(clearOtpState());
+      console.log('Redux OTP state cleared after success');
+    }, 100);
+  }, [onSuccess, dispatch]);
+
+  // Handle OTP verification success with stable dependencies
+  useEffect(() => {
+    if (verifySuccess) {
+      console.log('useEffect triggered - verifySuccess is:', verifySuccess, 'Calling handleSuccessNavigation');
+      handleSuccessNavigation();
+    }
+  }, [verifySuccess, handleSuccessNavigation]);
+
+  // Auto-move to OTP step after successful submission
+  useEffect(() => {
+    if (submitData && step === 1) {
+      console.log('OTP sent successfully! Moving to verification step...');
+      setStep(2);
+    }
+  }, [submitData, step]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
-    // For phone, only allow digits
     if (name === 'phone') {
       const digitsOnly = value.replace(/\D/g, '');
       setFormData(prev => ({ ...prev, [name]: digitsOnly }));
@@ -72,18 +87,17 @@ const OtpModal = ({ isOpen, onClose, onSuccess }) => {
   const handlePhoneSubmit = (e) => {
     e.preventDefault();
     
-    // Validate phone number (should be 10 digits)
     if (formData.phone.length !== 10) {
       alert('Please enter a valid 10-digit mobile number');
       return;
     }
     
-    // Combine first and last name, add +91 to phone
     const payload = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
-      phone: `+91${formData.phone}` // Add +91 prefix
+      phone: `+91${formData.phone}`
     };
     
+    console.log('Submitting lead with payload:', payload);
     dispatch(submitLead(payload));
   };
 
@@ -117,8 +131,10 @@ const OtpModal = ({ isOpen, onClose, onSuccess }) => {
       return;
     }
     
+    console.log('Verifying OTP:', otp);
+    
     dispatch(verifyOtp({ 
-      phone: `+91${formData.phone}`, // Add +91 prefix
+      phone: `+91${formData.phone}`, 
       otp 
     }));
   };
@@ -126,8 +142,9 @@ const OtpModal = ({ isOpen, onClose, onSuccess }) => {
   const handleResendOtp = () => {
     const payload = {
       name: `${formData.firstName} ${formData.lastName}`.trim(),
-      phone: `+91${formData.phone}` // Add +91 prefix
+      phone: `+91${formData.phone}`
     };
+    console.log('Resending OTP...');
     dispatch(submitLead(payload));
     setOtpInputs(['', '', '', '', '', '']);
     setOtp('');
@@ -262,7 +279,7 @@ const OtpModal = ({ isOpen, onClose, onSuccess }) => {
               </div>
 
               {/* Success Message */}
-              {verifySuccess === true && (
+              {verifySuccess && (
                 <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm text-center">
                   ✓ Verification successful! Redirecting...
                 </div>

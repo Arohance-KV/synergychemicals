@@ -1,10 +1,10 @@
-// src/store/otpSlice.js
+// src/redux/otpSlice.js (UPDATED: Add modal state)
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// Initial state for OTP
 const initialState = {
-  submitData: null,      // API response for /submit
-  verifySuccess: null,   // true/false after verify-otp
+  submitData: null,
+  verifySuccess: null,
+  isModalOpen: false,  // NEW: Modal open state
   loading: false,
   error: null,
 };
@@ -42,14 +42,13 @@ export const verifyOtp = createAsyncThunk(
       });
       if (!response.ok) throw new Error('Failed to verify OTP');
       const data = await response.json();
-      return data.data; // true or false
+      return data.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
-// Slice definition
 const otpSlice = createSlice({
   name: 'otp',
   initialState,
@@ -59,6 +58,9 @@ const otpSlice = createSlice({
       state.verifySuccess = null;
       state.error = null;
       state.loading = false;
+    },
+    setModalOpen(state, action) {  // NEW: Toggle modal
+      state.isModalOpen = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -72,7 +74,7 @@ const otpSlice = createSlice({
       })
       .addCase(submitLead.fulfilled, (state, action) => {
         state.loading = false;
-        state.submitData = action.payload; // Contains sid, phone, etc.
+        state.submitData = action.payload;
       })
       .addCase(submitLead.rejected, (state, action) => {
         state.loading = false;
@@ -86,21 +88,23 @@ const otpSlice = createSlice({
       })
       .addCase(verifyOtp.fulfilled, (state, action) => {
         state.loading = false;
-        state.verifySuccess = action.payload; // true/false
+        state.verifySuccess = Boolean(action.payload);
+        console.log('Verify OTP fulfilled - raw payload:', action.payload, '-> coerced to:', state.verifySuccess);
       })
       .addCase(verifyOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        console.log('Verify OTP rejected - error:', action.payload);
       });
   },
 });
 
-export const { clearOtpState } = otpSlice.actions;
+export const { clearOtpState, setModalOpen } = otpSlice.actions;  // Export new action
 
-// Selectors for components
 export const selectOtpSubmitData = (state) => state.otp.submitData;
 export const selectOtpVerifySuccess = (state) => state.otp.verifySuccess;
 export const selectOtpLoading = (state) => state.otp.loading;
 export const selectOtpError = (state) => state.otp.error;
+export const selectIsModalOpen = (state) => state.otp.isModalOpen;  // NEW: Selector for modal
 
 export default otpSlice.reducer;

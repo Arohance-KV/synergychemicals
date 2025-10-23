@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
@@ -12,6 +12,18 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import PressRelease from './pages/PressRelease';
 import ServicesPage from './pages/ServicesPage';
 
+// Protected Route Component for Products (NEW)
+const ProtectedProducts = () => {
+  const isOtpVerified = sessionStorage.getItem('otpVerified') === 'true';
+  
+  if (!isOtpVerified) {
+    // Redirect to home; user can click PRODUCT LIST to trigger modal
+    return <Navigate to="/" replace />;
+  }
+  
+  return <ProductsPage />;
+};
+
 function App() {
   return (
     <Router>
@@ -22,7 +34,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/services/:serviceId" element={<ServicesPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products" element={<ProtectedProducts />} /> {/* UPDATED: Protected */}
           <Route path="/products/:productId" element={<ProductDetailPage />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/contact" element={<ContactPage />} />

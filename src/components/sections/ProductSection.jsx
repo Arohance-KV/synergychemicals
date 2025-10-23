@@ -1,13 +1,35 @@
-// src/components/sections/Products.jsx
+// src/components/sections/ProductSection.jsx
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { fetchAllProducts, selectAllProducts, selectProductLoading, selectProductError } from '../../redux/productSlice';
+import { setModalOpen } from '../../redux/otpSlice';  // NEW: Import for modal dispatch
 
 const ProductSection = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [useFallback, setUseFallback] = useState(false);  // NEW: Fallback flag
   const sectionRef = useRef(null);
+
+  // Redux state for products
+  const products = useSelector(selectAllProducts);
+  const loading = useSelector(selectProductLoading);
+  const error = useSelector(selectProductError);  // NEW: Error selector
+
+  useEffect(() => {
+    // Fetch products on mount
+    dispatch(fetchAllProducts()).then((result) => {
+      if (result.error || (result.payload && result.payload.length === 0)) {
+        console.warn('Products fetch failed or empty—using fallback data');
+        setUseFallback(true);
+      }
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,37 +52,60 @@ const ProductSection = () => {
     };
   }, []);
 
-  // Sample products data
-  const products = [
+  // Fallback sample data (from your original code)
+  const fallbackProducts = [
     {
       id: 1,
       name: "PRODUCT NAME",
       code: "#52612",
       description: "CONTINUED THE DEVELOPMENT AND SCALE-UP OF BIO-BASED SURFACTANT MANUFACTURING TECHNOLOGY AND ACHIEVED THE SOLVENT-FREE PROCESS. THIS PROCESS DOES NOT GENERATE ANY SOLID WASTE AND EFFLUENT.",
-      image: "/assets/product-1.png"
+      mainImage: { url: "/assets/product-1.png" }  // UPDATED: Match API structure
     },
     {
       id: 2,
       name: "ADVANCED FORMULA",
       code: "#52613",
       description: "INNOVATIVE CHEMICAL SOLUTIONS DESIGNED FOR MAXIMUM EFFICIENCY AND ENVIRONMENTAL SUSTAINABILITY. ZERO WASTE PRODUCTION WITH ADVANCED BIOTECHNOLOGY INTEGRATION.",
-      image: "/assets/product-2.png"
+      mainImage: { url: "/assets/product-2.png" }
     },
     {
       id: 3,
       name: "BIO SURFACTANT",
       code: "#52614",
       description: "NEXT-GENERATION BIOLOGICAL SURFACTANTS WITH SUPERIOR PERFORMANCE CHARACTERISTICS. ENVIRONMENTALLY FRIENDLY PRODUCTION PROCESS WITH NO HARMFUL BYPRODUCTS.",
-      image: "/assets/product-3.png"
+      mainImage: { url: "/assets/product-3.png" }
     }
   ];
 
+  // Use fallback if error, empty, or flag set
+  const displayProducts = useFallback || error || (products && products.length === 0) ? fallbackProducts : products;
+
+  // Helper to check if OTP is verified
+  const isOtpVerified = () => {
+    return sessionStorage.getItem('otpVerified') === 'true';
+  };
+
+  // Handle Explore More click - similar to Navbar (UPDATED: Dispatch modal open)
+  const handleExploreMore = (e) => {
+    e.preventDefault();
+    
+    if (isOtpVerified()) {
+      // Skip modal, go directly to products
+      console.log('OTP already verified, navigating directly to products');
+      navigate('/products');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Open modal for verification via Redux
+      dispatch(setModalOpen(true));
+    }
+  };
+
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % products.length);
+    setCurrentSlide((prev) => (prev + 1) % Math.max(displayProducts.length, 1));
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + products.length) % products.length);
+    setCurrentSlide((prev) => (prev - 1 + Math.max(displayProducts.length, 1)) % Math.max(displayProducts.length, 1));
   };
 
   // Touch handlers for mobile swipe
@@ -90,6 +135,26 @@ const ProductSection = () => {
     setTouchEnd(0);
   };
 
+  // Loading skeleton
+  if (loading && !useFallback) {
+    return (
+      <section ref={sectionRef} id="products" className="relative overflow-hidden">
+        <div className="relative h-64 sm:h-80 md:h-96 bg-gray-200 animate-pulse"></div>
+        <div className="bg-slate-800 text-white py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-600 rounded w-3/4 mb-4"></div>
+              <div className="h-4 bg-gray-600 rounded w-1/2 mb-4"></div>
+              <div className="h-10 bg-gray-600 rounded-full w-32"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const currentProduct = displayProducts[currentSlide % displayProducts.length];
+
   return (
     <section 
       ref={sectionRef}
@@ -103,11 +168,11 @@ const ProductSection = () => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Product Image Background */}
+        {/* Product Image Background - UPDATED: Use mainImage.url */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
           style={{
-            backgroundImage: `url('${products[currentSlide].image}')`
+            backgroundImage: `url('${currentProduct.mainImage?.url || '/assets/placeholder.png'}')`
           }}
         >
           {/* Gradient overlay for better text visibility on mobile */}
@@ -118,31 +183,41 @@ const ProductSection = () => {
       {/* Bottom Half - Dark Product Details */}
       <div className="bg-slate-800 text-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 md:py-12">
+          {/* Error Banner if applicable (NEW) */}
+          {error && (
+            <div className="mb-4 p-3 bg-yellow-500/20 border border-yellow-500/50 text-yellow-100 text-sm rounded-lg">
+              Unable to load full catalog—showing highlights. Please try again later.
+            </div>
+          )}
+          
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-0">
             {/* Product Content */}
             <div className="flex-1 lg:max-w-3xl">
               <div className={`transition-all duration-700 ${
                 isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
               }`}>
-                {/* Product Title and Code */}
+                {/* Product Title and Code - UPDATED: Use productCode */}
                 <div className="mb-6 md:mb-8">
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6">
-                    <span>{products[currentSlide].name}</span>
+                    <span>{currentProduct.name || 'PRODUCT NAME'}</span>
                     <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal text-gray-400">
-                      {products[currentSlide].code}
+                      {currentProduct.productCode || '#52612'}
                     </span>
                   </h2>
                 </div>
 
-                {/* Product Description */}
+                {/* Product Description - UPDATED: Use subheading if available */}
                 <div className="mb-6 md:mb-10">
                   <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl">
-                    {products[currentSlide].description}
+                    {currentProduct.subheading || currentProduct.description || 'Product description not available.'}
                   </p>
                 </div>
 
                 {/* Explore More Button */}
-                <button className="w-full sm:w-auto bg-white text-slate-800 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 text-sm md:text-base tracking-wide">
+                <button
+                  onClick={handleExploreMore}
+                  className="w-full sm:w-auto bg-white text-slate-800 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 text-sm md:text-base tracking-wide"
+                >
                   EXPLORE MORE
                 </button>
               </div>
@@ -172,7 +247,7 @@ const ProductSection = () => {
           <div className="flex items-center justify-between mt-6 sm:mt-8">
             {/* Slide Indicators */}
             <div className="flex justify-start space-x-2">
-              {products.map((_, index) => (
+              {displayProducts.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
