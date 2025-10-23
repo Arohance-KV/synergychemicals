@@ -159,7 +159,7 @@ const Navbar = () => {
               >
                 PRODUCT LIST
               </button>
-              <Link 
+              {/*<Link 
                 to="/careers" 
                 onClick={handleLinkClick}
                 className={`font-medium transition-colors duration-300 hover:text-orange-400 ${
@@ -169,7 +169,7 @@ const Navbar = () => {
                 }`}
               >
                 CAREERS
-              </Link>
+              </Link>*/}
               <Link 
                 to="/contact" 
                 onClick={handleLinkClick}
@@ -187,7 +187,7 @@ const Navbar = () => {
             <div className="hidden lg:flex items-center space-x-4">
               {/* WhatsApp */}
               <a 
-                href="https://wa.me/919923131311" 
+                href="https://wa.me/919945107777" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className={`cursor-pointer transition-colors hover:text-green-500 ${getIconColor()}`}
@@ -205,13 +205,13 @@ const Navbar = () => {
                 <FaLinkedin className="h-5 w-5" />
               </a>
               
-              {/* Gmail */}
+              {/* Gmail 
               <a 
                 href="mailto:info@synergy.com"
                 className={`cursor-pointer transition-colors hover:text-red-500 ${getIconColor()}`}
               >
                 <FaGoogle className="h-5 w-5" />
-              </a>
+              </a>*/}
               
               {/* Twitter/X */}
               <a 
@@ -223,10 +223,10 @@ const Navbar = () => {
                 <FaXTwitter className="h-5 w-5" />
               </a>
               
-              {/* Search */}
+              {/* Search 
               <button className="bg-orange-500 p-2 rounded-full cursor-pointer hover:bg-orange-600 transition-colors">
                 <Search className="h-4 w-4 text-white" />
-              </button>
+              </button>*/}
             </div>
 
             {/* Mobile menu button */}
@@ -270,7 +270,7 @@ const Navbar = () => {
         >
           <div className="h-full overflow-y-auto">
             <div className="px-6 py-20 space-y-6">
-              {/* Mobile Logo */}
+              {/* Mobile Logo 
               <div className="pb-6 border-b border-gray-200">
                 <Link to="/" onClick={handleLinkClick}>
                   <img 
@@ -282,7 +282,7 @@ const Navbar = () => {
                     }}
                   />
                 </Link>
-              </div>
+              </div>*/}
               
               {/* Navigation Links */}
               <div className="space-y-4">
@@ -312,7 +312,7 @@ const Navbar = () => {
                 >
                   PRODUCT LIST
                 </button>
-                <Link 
+                {/*<Link 
                   to="/careers" 
                   onClick={handleLinkClick}
                   className={`block text-lg font-medium hover:text-orange-400 transition-colors py-2 ${
@@ -320,7 +320,7 @@ const Navbar = () => {
                   }`}
                 >
                   CAREERS
-                </Link>
+                </Link>*/}  
                 <Link 
                   to="/contact" 
                   onClick={handleLinkClick}
@@ -352,12 +352,12 @@ const Navbar = () => {
                   >
                     <FaLinkedin className="h-6 w-6" />
                   </a>
-                  <a 
+                  {/*<a 
                     href="mailto:info@synergy.com"
                     className="text-gray-600 cursor-pointer hover:text-red-500 transition-colors"
                   >
                     <FaGoogle className="h-6 w-6" />
-                  </a>
+                  </a>*/}
                   <a 
                     href="https://twitter.com/synergy_chemicals" 
                     target="_blank" 
@@ -369,13 +369,13 @@ const Navbar = () => {
                 </div>
               </div>
 
-              {/* Search Button */}
+              {/* Search Button 
               <div className="pt-4">
                 <button className="w-full bg-orange-500 text-white py-3 rounded-full font-medium hover:bg-orange-600 transition-colors flex items-center justify-center gap-2">
                   <Search className="h-5 w-5" />
                   <span>Search</span>
                 </button>
-              </div>
+              </div>*/}
             </div>
           </div>
         </div>

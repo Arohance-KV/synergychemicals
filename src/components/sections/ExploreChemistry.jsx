@@ -1,5 +1,13 @@
+// src/components/sections/ExploreChemistry.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  fetchAllIndustries, 
+  selectAllIndustries, 
+  selectIndustryLoading, 
+  selectIndustryError 
+} from '../../redux/industrySlice';
 
 const ExploreChemistry = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,6 +17,17 @@ const ExploreChemistry = () => {
   const [touchEnd, setTouchEnd] = useState(0);
   const sectionRef = useRef(null);
   const listRef = useRef(null);
+
+  // Redux state
+  const dispatch = useDispatch();
+  const industriesData = useSelector(selectAllIndustries);
+  const loading = useSelector(selectIndustryLoading);
+  const error = useSelector(selectIndustryError);
+
+  // Fetch industries on component mount
+  useEffect(() => {
+    dispatch(fetchAllIndustries());
+  }, [dispatch]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,65 +67,31 @@ const ExploreChemistry = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const industries = [
-    {
-      id: 1,
-      title: "Chemical & water treatment",
-      image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=600&fit=crop", 
-      bgColor: "bg-blue-50"
-    },
-    {
-      id: 2,
-      title: "Metal & mining",
-      image: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?w=600&h=600&fit=crop",
-      bgColor: "bg-yellow-50"
-    },
-    {
-      id: 3,
-      title: "Food, feed & pharmaceuticals",
-      image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600&h=600&fit=crop",
-      bgColor: "bg-pink-50"
-    },
-    {
-      id: 4,
-      title: "Construction & infrastructure",
-      image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&h=600&fit=crop",
-      bgColor: "bg-purple-50"
-    },
-    {
-      id: 5,
-      title: "Oil & gas",
-      image: "/assets/construction.png",
-      bgColor: "bg-orange-50"
-    },
-    {
-      id: 6,
-      title: "Agriculture & fertilizers",
-      image: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=600&h=600&fit=crop",
-      bgColor: "bg-green-50"
-    },
-    {
-      id: 7,
-      title: "Textiles & leather",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop",
-      bgColor: "bg-indigo-50"
-    },
-    {
-      id: 8,
-      title: "Pulp & paper",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop",
-      bgColor: "bg-teal-50"
-    },
-    {
-      id: 9,
-      title: "Personal care & cosmetics",
-      image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&h=600&fit=crop",
-      bgColor: "bg-rose-50"
-    }
-  ];
+  // Transform API data - only use name and image
+  const industries = industriesData.map((industry, index) => {
+    // Background colors cycle
+    const bgColors = [
+      "bg-blue-50",
+      "bg-yellow-50",
+      "bg-pink-50",
+      "bg-purple-50",
+      "bg-orange-50",
+      "bg-green-50",
+      "bg-indigo-50",
+      "bg-teal-50",
+      "bg-rose-50"
+    ];
+
+    return {
+      id: industry._id,
+      title: industry.name?.replace(/"/g, '') || 'Industry',
+      image: industry.image?.url || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=600&fit=crop',
+      bgColor: bgColors[index % bgColors.length]
+    };
+  });
 
   const totalSlides = industries.length;
-  const maxIndex = totalSlides - itemsPerView;
+  const maxIndex = Math.max(0, totalSlides - itemsPerView);
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
@@ -153,6 +138,37 @@ const ExploreChemistry = () => {
       setCurrentIndex(Math.max(0, maxIndex));
     }
   }, [itemsPerView, maxIndex, currentIndex]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <section className="py-12 md:py-16 lg:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FF6A00]"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <section className="py-12 md:py-16 lg:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-20">
+            <p className="text-red-600">Error loading industries: {error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // No data - don't render section
+  if (industries.length === 0) {
+    return null;
+  }
 
   return (
     <section 
@@ -279,6 +295,9 @@ const ExploreChemistry = () => {
                           alt={industry.title}
                           src={industry.image}
                           loading="lazy"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=600&fit=crop';
+                          }}
                         />
                       </div>
                     </div>

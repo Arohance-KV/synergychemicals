@@ -48,19 +48,20 @@ const ProductsPage = () => {
   // Transform API products to match component structure
   const transformedProducts = products.map(product => ({
     id: product._id,
-    name: product.name.replace(/"/g, ''),
-    code: product.productCode.replace(/"/g, ''),
-    image: product.mainImage.url,
+    name: product.name?.replace(/"/g, '') || 'Product',
+    code: product.productCode?.replace(/"/g, '') || '#N/A',
+    image: product.mainImage?.url || 'https://via.placeholder.com/400x300?text=Product',
     category: product.subheading?.replace(/"/g, '') || 'Product'
   }));
 
   // Transform API industries to match component structure
+  // Industry API response: { name: "Name", image: { url: "https://..." } }
   const transformedIndustries = industries.map(industry => ({
     id: industry._id,
-    name: industry.name?.replace(/"/g, '') || industry.name,
-    code: industry.industryCode?.replace(/"/g, '') || '#IND',
-    image: industry.mainImage?.url || '/assets/products/sodium-bicarbonate.jpg',
-    category: industry.description?.replace(/"/g, '').substring(0, 50) || 'Industry'
+    name: industry.name?.replace(/"/g, '') || 'Industry',
+    code: null,
+    image: industry.image?.url || 'https://via.placeholder.com/400x300?text=Industry', // Access image.url
+    category: null
   }));
 
   const displayData = activeTab === 'products' ? transformedProducts : transformedIndustries;
@@ -165,7 +166,7 @@ const ProductsPage = () => {
               {filteredData.map((item) => (
                 <div
                   key={item.id}
-                  className="group cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                  className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
                 >
                   {/* Image */}
                   <div className="relative h-64 overflow-hidden bg-gray-100">
@@ -174,7 +175,7 @@ const ProductsPage = () => {
                       alt={item.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x300?text=' + item.name;
+                        e.target.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(item.name);
                       }}
                     />
                     {/* Overlay on hover */}
@@ -186,8 +187,14 @@ const ProductsPage = () => {
                     <h3 className="text-lg font-bold text-[#32405B] mb-2 group-hover:text-[#FF6A00] transition-colors">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-gray-500">{item.code}</p>
-                    {item.category && (
+                    
+                    {/* Only show code for products */}
+                    {activeTab === 'products' && item.code && (
+                      <p className="text-sm text-gray-500">{item.code}</p>
+                    )}
+                    
+                    {/* Only show category for products */}
+                    {activeTab === 'products' && item.category && (
                       <p className="text-xs text-gray-400 mt-2">{item.category}</p>
                     )}
                   </div>

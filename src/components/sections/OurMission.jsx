@@ -1,7 +1,46 @@
 // src/components/sections/OurMission.jsx
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const OurMission = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (contentRef.current) {
+      observer.observe(contentRef.current);
+    }
+
+    return () => {
+      if (contentRef.current) {
+        observer.unobserve(contentRef.current);
+      }
+    };
+  }, []);
+
+  const strengths = [
+    'We provide support for vendor qualification documentation, both from the vendor and manufacturer sides.',
+    'We assist with virtual and physical audits at the manufacturer\'s plant.',
+    'We ensure timely supply and delivery.',
+    'We provide end-to-end support in the event of client rejections, working closely with the manufacturer to address issues and guide the next steps.'
+  ];
+
+  const coreValues = [
+    'Integrity in every transaction',
+    'Partnership through synergy',
+    'We constantly seek to improve our processes, services, and knowledge to exceed industry standards and client expectations',
+    'We build long-term partnerships with manufacturers and clients based on mutual trust and shared goals',
+    'Our clients are at the center of everything we do. We strive to understand their needs and deliver tailored solutions with efficiency and reliability.'
+  ];
+
   return (
     <section 
       className="py-12 md:py-16 lg:py-20 relative overflow-hidden"
@@ -18,7 +57,7 @@ const OurMission = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Container with Team Image and Overlay Box */}
-        <div className="relative flex justify-center">
+        <div className="relative flex justify-center mb-12 md:mb-16">
           
           <div className="relative w-full max-w-[1270px]">
             {/* Team Photo - Responsive */}
@@ -46,15 +85,83 @@ const OurMission = () => {
                   Our mission
                 </h2>
                 <p className="text-[#FF6A00] text-sm sm:text-base md:text-lg lg:text-xl text-center leading-relaxed">
-                  Our mission is to deliver high-quality chemical solutions that empower industries, ensure sustainability, and create value for our customers, employees, and communities.
+                  Our mission is to provide reliable chemical products and services through teamwork, innovation, and a commitment to quality
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Spacer to prevent content overlap - Increased for lower card position */}
+        {/* Spacer to prevent content overlap */}
         <div className="h-40 sm:h-48 md:h-56 lg:h-44"></div>
+
+        {/* Our Strengths and Core Values Section */}
+        <div ref={contentRef} className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            
+            {/* Left Column - Our Strengths */}
+            <div 
+              className={`transition-all duration-1000 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-[#32405B] mb-6">
+                Our Strengths
+              </h3>
+              <div className="space-y-4">
+                {strengths.map((strength, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-start gap-3 transition-all duration-700 ${
+                      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+                    }`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    {/* Bullet Point */}
+                    <div className="flex-shrink-0 w-2 h-2 bg-[#FF6A00] rounded-full mt-2"></div>
+                    
+                    {/* Content */}
+                    <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                      {strength}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column - Core Values */}
+            <div 
+              className={`transition-all duration-1000 delay-200 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+              }`}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-[#32405B] mb-6">
+                Core Values
+              </h3>
+              <div className="space-y-4">
+                {coreValues.map((value, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-start gap-3 transition-all duration-700 ${
+                      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+                    }`}
+                    style={{ transitionDelay: `${200 + index * 100}ms` }}
+                  >
+                    {/* Bullet Point */}
+                    <div className="flex-shrink-0 w-2 h-2 bg-[#FF6A00] rounded-full mt-2"></div>
+                    
+                    {/* Content */}
+                    <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                      {value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </section>
   );

@@ -37,21 +37,21 @@ const OurServices = () => {
     },
     {
       id: 2,
-      title: "Transportation",
+      title: "Logistics",
       icon: "/assets/truck.png",
-      route: "transportation"
+      route: "logistics"
     },
     {
       id: 3,
-      title: "Quality Testing",
-      icon: "/assets/test.png",
-      route: "quality-testing"
+      title: "Sourcing",
+      icon: "/assets/sourcing.png",
+      route: "sourcing"
     },
     {
       id: 4,
-      title: "Cargo Services",
-      icon: "/assets/cargo.png",
-      route: "cargo-services"
+      title: "Product Portfolio",
+      icon: "/assets/portfolio.png",
+      route: "product-portfolio"
     }
   ];
 

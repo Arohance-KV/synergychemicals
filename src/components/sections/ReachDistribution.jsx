@@ -33,50 +33,62 @@ const ReachDistribution = () => {
     {
       id: 1,
       name: "Arohance Tech & Marketing",
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/Balaji Amines Ltd.avif",
       region: "North America"
     },
     {
       id: 2,
       name: "Arohance Tech & Marketing",
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/DNSC_ltd.jpg",
       region: "Europe"
     },
     {
       id: 3,
       name: "Arohance Tech & Marketing", 
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/deedy-chem.jpg",
       region: "Asia Pacific"
     },
     {
       id: 4,
       name: "Arohance Tech & Marketing",
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/nfi_ltd.jpg",
       region: "Middle East"
     },
     {
       id: 5,
       name: "Arohance Tech & Marketing",
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/Vinati_Organics.jpg",
       region: "South America"
     },
     {
       id: 6,
       name: "Arohance Tech & Marketing",
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/Veeral-Organics-Logo.webp",
       region: "Africa"
     },
     {
       id: 7,
       name: "Arohance Tech & Marketing",
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/UCI-ltd.jpg",
       region: "Australia"
     },
     {
       id: 8,
       name: "Arohance Tech & Marketing",
-      logo: "/assets/arohance-logo.jpg",
+      logo: "/assets/SRFLtd.jpg",
       region: "Southeast Asia"
+    },
+    {
+      id: 9,
+      name: "Arohance Tech & Marketing",
+      logo: "/assets/Deepak-Nitrite-Ltd.png",
+      region: "South Asia"
+    },
+    {
+      id: 10,
+      name: "Arohance Tech & Marketing",
+      logo: "/assets/acme_sujan.jpg",
+      region: "Central America"
     }
   ];
 
@@ -114,7 +126,7 @@ const ReachDistribution = () => {
     };
   }, [distributionPartners.length]);
 
-  // Hexagon Component with wider dimensions
+  // Hexagon Component with responsive dimensions
   const HexagonCard = ({ partner, index, isVisible }) => {
     return (
       <div
@@ -127,12 +139,19 @@ const ReachDistribution = () => {
           transitionDelay: `${(index % 4) * 150}ms`,
         }}
       >
-        {/* Hexagon Container - Increased width */}
-        <div className="relative group cursor-pointer mx-auto" style={{ width: '260px', height: '230px' }}>
-          {/* SVG Hexagon with Border */}
+        {/* Hexagon Container - Responsive width */}
+        <div 
+          className="relative group cursor-pointer mx-auto" 
+          style={{ 
+            width: 'min(260px, 80vw)', // Responsive: max 260px on desktop, scale down on mobile
+            height: 'min(230px, 71.25vw)' // Maintain aspect ratio ~260:230 ≈ 1.13:1, but scaled
+          }}
+        >
+          {/* SVG Hexagon with Border - Responsive viewBox */}
           <svg 
             viewBox="0 0 260 230" 
             className="absolute inset-0 w-full h-full transition-transform duration-300 group-hover:scale-105"
+            preserveAspectRatio="xMidYMid meet"
           >
             {/* Define hexagon path - wider hexagon */}
             <defs>
@@ -140,7 +159,8 @@ const ReachDistribution = () => {
                 <path d="M130 10 L220 57.5 L220 172.5 L130 220 L40 172.5 L40 57.5 Z" />
               </clipPath>
               <clipPath id={`hexagon-inner-${index}`}>
-                <path d="M130 14 L216 59.5 L216 170.5 L130 216 L44 170.5 L44 59.5 Z" />
+                {/* Adjusted inner path with reduced inset for more image space */}
+                <path d="M130 12 L218 58.5 L218 171.5 L130 218 L42 171.5 L42 58.5 Z" />
               </clipPath>
             </defs>
             
@@ -152,23 +172,24 @@ const ReachDistribution = () => {
               strokeWidth="4"
             />
             
-            {/* Image container with full coverage */}
+            {/* Image container with full coverage - adjusted dimensions to match new inner clip */}
             <foreignObject 
-              x="44" 
-              y="14" 
-              width="172" 
-              height="202"
+              x="42" 
+              y="12" 
+              width="176" 
+              height="206"
               clipPath={`url(#hexagon-inner-${index})`}
             >
-              <div className="w-full h-full flex items-center justify-center">
+              <div className="w-full h-full flex items-center justify-center bg-white">
                 <img 
                   src={partner.logo}
                   alt={partner.name}
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                   style={{ 
-                    minWidth: '100%', 
-                    minHeight: '100%',
-                    objectFit: 'cover'
+                    width: 'auto',
+                    height: 'auto',
+                    maxWidth: '100%',
+                    maxHeight: '100%'
                   }}
                 />
               </div>
@@ -271,7 +292,7 @@ const ReachDistribution = () => {
                 <div
                   key={`${partner.id}-${index}`}
                   className="flex-shrink-0 px-4 mb-8"
-                  style={{ width: '292px' }} // 260px + 32px padding
+                  style={{ width: 'min(292px, calc(80vw + 32px))' }} // Responsive: 292px on desktop, scale with viewport + padding
                 >
                   <HexagonCard 
                     partner={partner} 

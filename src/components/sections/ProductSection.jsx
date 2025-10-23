@@ -161,23 +161,16 @@ const ProductSection = () => {
       id="products" 
       className="relative overflow-hidden"
     >
-      {/* Top Half - Product Image */}
+      {/* Top Half - Heading Centered */}
       <div 
-        className="relative h-64 sm:h-80 md:h-96"
+        className="relative h-64 sm:h-80 md:h-96 bg-slate-800 flex items-center justify-center"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Product Image Background - UPDATED: Use mainImage.url */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
-          style={{
-            backgroundImage: `url('${currentProduct.mainImage?.url || '/assets/placeholder.png'}')`
-          }}
-        >
-          {/* Gradient overlay for better text visibility on mobile */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-800/20 md:hidden"></div>
-        </div>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+          Our Products
+        </h1>
       </div>
 
       {/* Bottom Half - Dark Product Details */}
@@ -198,19 +191,12 @@ const ProductSection = () => {
               }`}>
                 {/* Product Title and Code - UPDATED: Use productCode */}
                 <div className="mb-6 md:mb-8">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white flex flex-row items-baseline gap-2 sm:gap-6">
                     <span>{currentProduct.name || 'PRODUCT NAME'}</span>
                     <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal text-gray-400">
-                      {currentProduct.productCode || '#52612'}
+                      {currentProduct.productCode || currentProduct.code || '#52612'}
                     </span>
                   </h2>
-                </div>
-
-                {/* Product Description - UPDATED: Use subheading if available */}
-                <div className="mb-6 md:mb-10">
-                  <p className="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl">
-                    {currentProduct.subheading || currentProduct.description || 'Product description not available.'}
-                  </p>
                 </div>
 
                 {/* Explore More Button */}

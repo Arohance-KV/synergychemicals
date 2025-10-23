@@ -17,112 +17,111 @@ const ServicesPage = () => {
       sections: [
         {
           type: 'intro',
-          content: 'At Synergy Chemicals, Our Sales And Marketing Team Acts As The Bridge Between Innovation And Industry. We Don\'t Just Sell Products — We Build Long-Term Partnerships By Understanding Our Customers\' Needs And Delivering Tailored Solutions.'
+          content: 'Our team plays a vital role in promoting quality chemicals from trusted manufacturers to diverse industries. With a strong sales network, transparent communication, and a customer-focused approach, we ensure every client receives the right solution with reliable service and competitive value.'
         },
         {
           type: 'customer-centric',
-          title: 'Customer-Centric',
+          title: 'Customer-Centric Approach',
           image: '/assets/customer-centric.jpg',
           content: [
-            'At Synergy Chemicals, Our Sales And Marketing Services Are Designed To Create Value Beyond The Product Itself. We Understand That Every Client Has Unique Requisitions, And Our Mission Is To Deliver Solutions That Are Reliable, Efficient, And Sensitive.',
-            'Our Sales Team Is Committed To You With Customers By Offering Technical Expertise, Product Recommendations, And Real-To-Real Support To Ensure Maximum Benefit From Every Purchase. We Focus On Personalized Service Based On Trust And Transparency. We Aim To Become A Long-Term Partner In Your Growth Journey.'
+            'We prioritize understanding our clients\' unique needs through in-depth consultations and tailored recommendations. Our sales experts provide comprehensive product knowledge and application guidance to help you achieve optimal results.',
+            'Building lasting relationships is at the heart of our strategy. We offer flexible pricing models, volume discounts, and customized support packages to meet your business objectives and foster mutual growth.'
           ]
         },
         {
-          type: 'distribution',
-          title: 'Distribution & Supply Chain',
-          image: '/assets/distribution.jpg',
+          type: 'market-strategy',
+          title: 'Strategic Market Promotion',
+          image: '/assets/market-strategy.jpg',
           content: [
-            'Our Exceptionally Committed Group With Business And Specialized Mastery Alongside Profound Market Knowledge Give Start To Finish Answers For Our Customers And Suppliers.',
-            'We Have A Very Skilled And Qualified Research And Development Team In Place Who Have Studied The Market For Over 30 Years. As Your Disposal To Conduct Strategic Market Research And Development, We Help Provide A Marketing Strategy As Per Your Preferences.',
-            'Proper Material Handling, Quality And Regulatory Compliance Of Our Products To Provide Essential Customer Service In Commercial As Well As Technical Aspects.'
-          ]
-        }
-      ]
-    },
-    'transportation': {
-      id: 'transportation',
-      title: 'Transportation',
-      heroImage: '/assets/transportation-hero.jpg',
-      sections: [
-        {
-          type: 'intro',
-          content: 'Synergy Chemicals Ensures Safe, Efficient, And Timely Delivery Of Chemical Products Through Our Advanced Transportation Network. We Understand The Critical Nature Of Chemical Logistics And Maintain The Highest Safety Standards.'
-        },
-        {
-          type: 'fleet-management',
-          title: 'Fleet Management',
-          image: '/assets/fleet.jpg',
-          content: [
-            'Our Modern Fleet Is Equipped With Specialized Vehicles Designed For Chemical Transportation. Each Vehicle Undergoes Regular Maintenance And Safety Inspections To Ensure Compliance With International Standards.',
-            'We Utilize GPS Tracking And Real-Time Monitoring Systems To Provide Complete Visibility Of Your Shipments. Our Drivers Are Trained In Hazardous Material Handling And Emergency Response Protocols.'
-          ]
-        },
-        {
-          type: 'logistics',
-          title: 'Logistics & Route Optimization',
-          image: '/assets/logistics.jpg',
-          content: [
-            'We Employ Advanced Route Planning Software To Optimize Delivery Times While Ensuring Safety And Regulatory Compliance. Our Logistics Team Works Around The Clock To Coordinate Seamless Transportation.',
-            'With Strategic Warehousing Locations And Distribution Centers, We Can Serve Customers Across Multiple Regions Efficiently. Temperature-Controlled Transportation Options Are Available For Sensitive Chemical Products.'
+            'Leveraging digital marketing, trade shows, and industry partnerships, we amplify your product visibility across target markets. Our campaigns are data-driven to maximize reach and conversion rates.',
+            'We provide end-to-end support from lead generation to order fulfillment, ensuring seamless integration with your supply chain for enhanced efficiency and customer satisfaction.'
           ]
         }
       ]
     },
-    'quality-testing': {
-      id: 'quality-testing',
-      title: 'Quality Testing',
-      heroImage: '/assets/quality-hero.jpg',
+    'logistics': {
+      id: 'logistics',
+      title: 'Logistics',
+      heroImage: '/assets/logistics-hero.jpg',
       sections: [
         {
           type: 'intro',
-          content: 'At Synergy Chemicals, Quality Is Not Just A Process — It\'s Our Promise. Our State-Of-The-Art Testing Facilities And Experienced Team Ensure That Every Product Meets The Highest Industry Standards Before Reaching Our Customers.'
+          content: 'With streamlined operations and reliable transport partners, we ensure safe, compliant, and on-time delivery across all regions — maintaining consistency and care at every step.'
         },
         {
-          type: 'laboratory',
-          title: 'Advanced Laboratory Facilities',
-          image: '/assets/laboratory.jpg',
+          type: 'transport-network',
+          title: 'Robust Transport Network',
+          image: '/assets/transport-network.jpg',
           content: [
-            'Our In-House Laboratory Is Equipped With Cutting-Edge Analytical Instruments Including Spectrophotometers, Chromatography Systems, And Material Testing Equipment. We Conduct Comprehensive Testing For Purity, Composition, And Performance.',
-            'Our Quality Control Team Follows Strict Testing Protocols Aligned With ISO Standards And Industry Regulations. Every Batch Undergoes Multiple Quality Checks From Raw Material Inspection To Final Product Verification.'
+            'Our extensive network of carriers and routes covers domestic and international destinations, utilizing road, rail, and sea transport for versatile shipping solutions.',
+            'Real-time tracking and predictive analytics allow proactive management of shipments, minimizing delays and providing full visibility throughout the journey.'
           ]
         },
         {
-          type: 'certification',
-          title: 'Certification & Compliance',
-          image: '/assets/certification.jpg',
+          type: 'compliance-safety',
+          title: 'Compliance & Safety Protocols',
+          image: '/assets/compliance-safety.jpg',
           content: [
-            'We Maintain Certifications From Leading International Bodies And Regulatory Authorities. Our Products Come With Complete Documentation Including Certificates Of Analysis, MSDS, And Compliance Reports.',
-            'Regular Third-Party Audits And Testing Ensure That Our Quality Management System Remains Robust And Up-To-Date. We Are Committed To Transparency And Provide Full Traceability For All Our Products.'
+            'Adhering to global regulations like IMDG, IATA, and DOT standards, we implement rigorous safety measures for hazardous materials handling and secure packaging.',
+            'Our dedicated logistics team coordinates with customs brokers for smooth border crossings and offers insurance options to protect your valuable consignments.'
           ]
         }
       ]
     },
-    'cargo-services': {
-      id: 'cargo-services',
-      title: 'Cargo Services',
-      heroImage: '/assets/cargo-hero.jpg',
+    'sourcing': {
+      id: 'sourcing',
+      title: 'Sourcing',
+      heroImage: '/assets/sourcing-hero.jpg',
       sections: [
         {
           type: 'intro',
-          content: 'Synergy Chemicals Offers Comprehensive Cargo Services For Domestic And International Shipments. Our Expertise In Chemical Logistics Ensures Your Products Are Handled With The Utmost Care And Delivered Safely To Their Destination.'
+          content: 'Our global sourcing expertise helps us procure premium-quality raw materials from trusted suppliers. Every product undergoes quality checks and complies with regulatory standards.'
         },
         {
-          type: 'international',
-          title: 'International Shipping',
-          image: '/assets/international-shipping.jpg',
+          type: 'supplier-network',
+          title: 'Global Supplier Network',
+          image: '/assets/logistics-hero.jpg',
           content: [
-            'We Have Established Partnerships With Leading Shipping Lines And Freight Forwarders Worldwide. Our Team Handles All Documentation, Customs Clearance, And Regulatory Requirements For Seamless International Trade.',
-            'From Container Shipping To Bulk Cargo, We Offer Flexible Solutions Tailored To Your Needs. Our Network Spans Across Major Ports Globally, Ensuring Efficient And Cost-Effective Delivery.'
+            'We maintain long-term partnerships with vetted manufacturers in key regions, ensuring access to high-grade materials at competitive prices through consolidated procurement.',
+            'Our sourcing specialists conduct regular audits and performance evaluations to uphold supplier reliability and adaptability to market fluctuations.'
           ]
         },
         {
-          type: 'warehousing',
-          title: 'Warehousing & Storage',
-          image: '/assets/warehouse.jpg',
+          type: 'quality-assurance',
+          title: 'Rigorous Quality Assurance',
+          image: '/assets/quality-assurance.webp',
           content: [
-            'Our Strategically Located Warehouses Are Designed For Chemical Storage With Proper Ventilation, Temperature Control, And Safety Systems. We Maintain Strict Inventory Management For Complete Product Traceability.',
-            'Value-Added Services Include Repackaging, Labeling, And Kitting To Meet Customer-Specific Requirements. Our Facilities Are Regularly Inspected And Comply With All Safety And Environmental Regulations.'
+            'Incoming materials are subjected to multi-stage inspections, including chemical analysis, purity testing, and documentation verification to meet ISO and REACH compliance.',
+            'We offer traceability from source to delivery, enabling full accountability and rapid issue resolution to safeguard your production processes.'
+          ]
+        }
+      ]
+    },
+    'product-portfolio': {
+      id: 'product-portfolio',
+      title: 'Product Portfolio',
+      heroImage: '/assets/portfolio-hero.jpg',
+      sections: [
+        {
+          type: 'intro',
+          content: 'Offering a diverse range of specialty and commodity chemicals, we serve key industries like Pharmaceuticals, Agrochemicals, Poultry, and Water Treatment with a focus on quality and reliability.'
+        },
+        {
+          type: 'specialty-chemicals',
+          title: 'Specialty Chemicals',
+          image: '/assets/specialty-chemicals.jpg',
+          content: [
+            'Our curated selection of high-performance specialty chemicals includes catalysts, intermediates, and additives designed for precision applications in pharmaceuticals and agrochemicals.',
+            'Each product is backed by technical data sheets and application support to ensure seamless integration and superior performance in your formulations.'
+          ]
+        },
+        {
+          type: 'commodity-chemicals',
+          title: 'Commodity Chemicals',
+          image: '/assets/commodity-chemicals.webp',
+          content: [
+            'We supply essential commodity chemicals in bulk volumes for large-scale operations in poultry feed, water treatment, and industrial processes, emphasizing cost-efficiency and consistent supply.',
+            'Sustainability is integral to our portfolio; we prioritize eco-friendly alternatives and recycled content where possible to support your green initiatives.'
           ]
         }
       ]
@@ -338,116 +337,6 @@ const ServicesPage = () => {
               );
             })}
           </div>
-
-          {/* Related Products Section - FULLY RESPONSIVE */}
-          <motion.div 
-            className="bg-gray-50 py-12 md:py-16"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div 
-                className="space-y-3 sm:space-y-4"
-                initial="initial"
-                whileInView="animate"
-                viewport={{ once: true }}
-                variants={{
-                  initial: {},
-                  animate: {
-                    transition: {
-                      staggerChildren: 0.1
-                    }
-                  }
-                }}
-              >
-                {[
-                  { name: 'Arohance', location: 'Bangalore', logo: '/assets/arohance-logo.png' },
-                  { name: 'Arohance', location: 'Bangalore', logo: '/assets/arohance-logo.png' },
-                  { name: 'Arohance', location: 'Bangalore', logo: '/assets/arohance-logo.png' },
-                  { name: 'Arohance', location: 'Bangalore', logo: '/assets/arohance-logo.png' },
-                  { name: 'Arohance', location: 'Bangalore', logo: '/assets/arohance-logo.png' },
-                  { name: 'Arohance', location: 'Bangalore', logo: '/assets/arohance-logo.png' }
-                ].map((product, index) => (
-                  <motion.div 
-                    key={index}
-                    className="bg-white border border-gray-200 hover:shadow-lg transition-all duration-300 p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group rounded-lg"
-                    variants={{
-                      initial: { opacity: 0, x: -50 },
-                      animate: { 
-                        opacity: 1, 
-                        x: 0,
-                        transition: {
-                          duration: 0.5,
-                          ease: "easeOut"
-                        }
-                      }
-                    }}
-                    whileHover={{ 
-                      scale: 1.02,
-                      transition: { duration: 0.2 }
-                    }}
-                  >
-                    <div className="flex items-center gap-4 sm:gap-8 md:gap-12 w-full sm:w-auto">
-                      {/* Logo */}
-                      <motion.div 
-                        className="flex-shrink-0"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <img 
-                          src={product.logo} 
-                          alt={product.name}
-                          className="h-12 sm:h-16 md:h-20 w-auto object-contain"
-                        />
-                      </motion.div>
-                      
-                      {/* Product Info */}
-                      <div>
-                        <motion.h4 
-                          className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-0.5 sm:mb-1"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.2 }}
-                        >
-                          {product.name}
-                        </motion.h4>
-                        <motion.p 
-                          className="text-gray-600 text-sm sm:text-base"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.3 }}
-                        >
-                          {product.location}
-                        </motion.p>
-                      </div>
-                    </div>
-                    
-                    {/* Learn More Button */}
-                    <motion.button 
-                      onClick={() => navigate('/products')}
-                      className="w-full sm:w-auto bg-[#1e293b] hover:bg-[#0f172a] text-white font-semibold px-6 sm:px-8 py-2.5 sm:py-3 transition-all duration-300 flex-shrink-0 relative overflow-hidden rounded"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <motion.span
-                        className="relative z-10 text-sm sm:text-base"
-                      >
-                        Learn More
-                      </motion.span>
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600"
-                        initial={{ x: "-100%" }}
-                        whileHover={{ x: 0 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    </motion.button>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </motion.div>
         </div>
         <GetInTouch />
       </motion.div>

@@ -126,7 +126,7 @@ const AboutVision = () => {
             isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
           }`}
         >
-          Our vision is to make work inspiring and fulfilling
+          Our vision
         </h2>
 
         {/* Subtitle Description with fade-in */}
@@ -135,7 +135,7 @@ const AboutVision = () => {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          HRLink is a cloud-based HR system designed to simplify and streamline HR processes. Grove HR is a powerful tool that can help SMB businesses manage their HR operations with ease.
+          Our Vision is to establish our own manufacturing facility and expand into global export markets
         </p>
 
         {/* Content Grid */}
@@ -143,22 +143,66 @@ const AboutVision = () => {
           
           {/* Left Column - Text Content with stagger animation */}
           <div className="space-y-4 md:space-y-6">
-            {[
-              "HRLink was established in 2009 as a U.S.-based software development & consulting company with development centers in Vietnam.",
-              "Besides providing outsourcing services, HRLink has built and successfully launched its own software companies. The most notable companies with millions of users worldwide.",
-              "HRLink is reliable, secure, and backed by a team of HR experts with a proven track record of developing high-quality technology solutions.",
-              "With the growing size of many startups and SME companies and the increasing complexity of HR regulations and employee expectations, manual HR processes can become time-consuming, error-prone, and difficult to manage. HR management software provides a centralized platform for storing and automating HR processes to offer more free time for HR staff."
-            ].map((text, index) => (
-              <p 
-                key={index}
-                className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
-                  isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-                }`}
-                style={{ transitionDelay: `${600 + index * 150}ms` }}
-              >
-                {text}
-              </p>
-            ))}
+            <p 
+              className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+              style={{ transitionDelay: '600ms' }}
+            >
+              Founded in 2004, Synergy Chemicals has grown from a small team into a trusted name in chemical distribution. With a strong focus on quality, reliability, and service, we connect leading manufacturers with industries across India.
+            </p>
+
+            <p 
+              className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+              style={{ transitionDelay: '750ms' }}
+            >
+              We cater to a diverse range of sectors, including Pharmaceuticals, Agrochemicals, Poultry Supplements, Water Treatment, and Construction Chemicals.
+            </p>
+
+            <p 
+              className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+              style={{ transitionDelay: '900ms' }}
+            >
+              Driven by teamwork and integrity, we continue to build lasting partnerships and deliver synergy through service.
+            </p>
+
+            <p 
+              className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+              style={{ transitionDelay: '1050ms' }}
+            >
+              At Synergy Chemicals, we believe that through teamwork, we can achieve anything. Founded in 2004, we have grown to become a trusted name in the chemical distribution industry, known for our commitment to quality, reliability, and innovation.
+            </p>
+
+            <div 
+              className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+              style={{ transitionDelay: '1200ms' }}
+            >
+              <p className="mb-3">Over the years, we have diversified our portfolio to serve a wide range of industries, including:</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Pharmaceuticals</li>
+                <li>Agrochemicals</li>
+                <li>Poultry Supplements</li>
+                <li>Water Treatment Chemicals</li>
+                <li>Construction Chemicals</li>
+              </ul>
+            </div>
+
+            <p 
+              className={`text-gray-700 leading-relaxed text-sm sm:text-base transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+              }`}
+              style={{ transitionDelay: '1350ms' }}
+            >
+              Our operations are categorized into both domestic and national markets, enabling us to meet the evolving needs of clients across multiple regions with agility and expertise.
+            </p>
           </div>
 
           {/* Right Column - Founder Image with slide and hover effect */}

@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AboutSection = () => {
+  const navigate= useNavigate();
   return (
     <section id="about" className="py-20 bg-white relative overflow-hidden">
       {/* Google Fonts Import */}
@@ -43,12 +45,13 @@ const AboutSection = () => {
                 className="text-gray-600 text-base leading-relaxed"
                 style={{ fontFamily: "'Source Code Pro', monospace" }}
               >
-                At Synergy Chemicals, we combine innovation, safety, and sustainability to provide chemical solutions for industries ranging from pharmaceuticals to manufacturing
+                At Synergy Chemicals, we believe that through teamwork, we can achieve anything . Founded in 2004, we have grown to become a trusted name in the chemical distribution industry, known for our commitment to quality, reliability, and innovation.
               </p>
             </div>
             <button 
               className="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
               style={{ fontFamily: "'Manrope', sans-serif" }}
+              onClick={() => navigate("/about")}
             >
               Learn more
             </button>
