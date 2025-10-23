@@ -1,15 +1,18 @@
 // src/components/layout/Navbar.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Search } from 'lucide-react';
 import useScrollPosition from '../../hooks/useScrollPosition';
 import { FaWhatsapp, FaGoogle, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import OtpModal from '../modals/OtpModal';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const { isScrolled } = useScrollPosition();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Scroll to top whenever route changes
   useEffect(() => {
@@ -42,6 +45,19 @@ const Navbar = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Handle Products click - Open OTP Modal
+  const handleProductsClick = (e) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    setIsOtpModalOpen(true);
+  };
+
+  // Handle OTP Success - Navigate to Products
+  const handleOtpSuccess = () => {
+    navigate('/products');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Determine navbar background
   const navBg = isHomePage 
     ? (isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent')
@@ -65,6 +81,13 @@ const Navbar = () => {
 
   return (
     <>
+      {/* OTP Modal */}
+      <OtpModal
+        isOpen={isOtpModalOpen}
+        onClose={() => setIsOtpModalOpen(false)}
+        onSuccess={handleOtpSuccess}
+      />
+
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-2">
@@ -104,9 +127,8 @@ const Navbar = () => {
               >
                 ABOUT US
               </Link>
-              <Link 
-                to="/products" 
-                onClick={handleLinkClick}
+              <button 
+                onClick={handleProductsClick}
                 className={`font-medium transition-colors duration-300 hover:text-orange-400 ${
                   isActive('/products')
                     ? 'text-orange-500 font-semibold'
@@ -114,7 +136,7 @@ const Navbar = () => {
                 }`}
               >
                 PRODUCT LIST
-              </Link>
+              </button>
               <Link 
                 to="/careers" 
                 onClick={handleLinkClick}
@@ -260,15 +282,14 @@ const Navbar = () => {
                 >
                   ABOUT US
                 </Link>
-                <Link 
-                  to="/products" 
-                  onClick={handleLinkClick}
-                  className={`block text-lg font-medium hover:text-orange-400 transition-colors py-2 ${
+                <button 
+                  onClick={handleProductsClick}
+                  className={`block text-lg font-medium hover:text-orange-400 transition-colors py-2 text-left w-full ${
                     isActive('/products') ? 'text-orange-500 font-semibold' : 'text-gray-800'
                   }`}
                 >
                   PRODUCT LIST
-                </Link>
+                </button>
                 <Link 
                   to="/careers" 
                   onClick={handleLinkClick}
