@@ -1,23 +1,51 @@
 // src/components/sections/GetInTouch.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ChevronDown } from 'lucide-react';
+import { createContact, clearError, clearSuccess } from '../../redux/contactSlice'; // Adjust path
 
 const GetInTouch = () => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    countryCode: '+91',
-    mobile: '',
-    email: '',
-    inquiryType: '',
-    details: ''
-  });
+  const dispatch = useDispatch();
+  const { loading, success, error } = useSelector((state) => state.contact);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
+  const [formData, setFormData] = useState({
+    name: '',
+    countryCode: '+91',
+    phoneNumber: '',
+    email: '',
+    message: ''
+  });
 
   const countryCodes = [
     '+91', '+1', '+44', '+86', '+61', '+971', '+65', '+60', '+81'
   ];
+
+  // Clear success message after 5 seconds and reset form
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        dispatch(clearSuccess());
+        setFormData({
+          name: '',
+          countryCode: '+91',
+          phoneNumber: '',
+          email: '',
+          message: ''
+        });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, dispatch]);
+
+  // Clear errors after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        dispatch(clearError());
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,32 +57,17 @@ const GetInTouch = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Success
-      setSubmitStatus('success');
-      setFormData({
-        fullName: '',
-        countryCode: '+91',
-        mobile: '',
-        email: '',
-        inquiryType: '',
-        details: ''
-      });
-      
-      // Reset success message after 5 seconds
-      setTimeout(() => setSubmitStatus(null), 5000);
-    } catch (error) {
-      // Error
-      setSubmitStatus('error');
-      setTimeout(() => setSubmitStatus(null), 5000);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Prepare data for API - combine country code with phone number
+    const contactData = {
+      name: formData.name,
+      phoneNumber: `${formData.countryCode}${formData.phoneNumber}`,
+      email: formData.email,
+      message: formData.message
+    };
+
+    // Dispatch the createContact action
+    await dispatch(createContact(contactData));
   };
 
   return (
@@ -93,12 +106,13 @@ const GetInTouch = () => {
               <div>
                 <input
                   type="text"
-                  name="fullName"
+                  name="name"
                   placeholder="Full name"
-                  value={formData.fullName}
+                  value={formData.name}
                   onChange={handleChange}
+                  disabled={loading}
                   required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
 
@@ -109,7 +123,8 @@ const GetInTouch = () => {
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleChange}
-                    className="w-full px-2 sm:px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none bg-white cursor-pointer text-sm sm:text-base"
+                    disabled={loading}
+                    className="w-full px-2 sm:px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all appearance-none bg-white cursor-pointer text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {countryCodes.map(code => (
                       <option key={code} value={code}>{code}</option>
@@ -119,13 +134,14 @@ const GetInTouch = () => {
                 </div>
                 <input
                   type="tel"
-                  name="mobile"
+                  name="phoneNumber"
                   placeholder="Mobile number"
-                  value={formData.mobile}
+                  value={formData.phoneNumber}
                   onChange={handleChange}
+                  disabled={loading}
                   required
                   pattern="[0-9]{10}"
-                  className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
+                  className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
 
@@ -137,37 +153,26 @@ const GetInTouch = () => {
                   placeholder="Email"
                   value={formData.email}
                   onChange={handleChange}
+                  disabled={loading}
                   required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
-                />
-              </div>
-
-              {/* Inquiry Type - Regular Input */}
-              <div>
-                <input
-                  type="text"
-                  name="inquiryType"
-                  placeholder="Inquiry type"
-                  value={formData.inquiryType}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all placeholder-gray-400 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
 
               {/* Details Textarea */}
               <div className="relative">
                 <textarea
-                  name="details"
+                  name="message"
                   placeholder="Enter more details"
-                  value={formData.details}
+                  value={formData.message}
                   onChange={handleChange}
-                  maxLength={50}
+                  disabled={loading}
+                  maxLength={500}
                   rows={4}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none placeholder-gray-400 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none placeholder-gray-400 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-xs text-gray-400">
-                  {formData.details.length}/50
+                  {formData.message.length}/500
                 </div>
               </div>
 
@@ -175,27 +180,28 @@ const GetInTouch = () => {
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={loading}
                   className="w-full bg-white border-2 border-gray-900 text-gray-900 py-2.5 sm:py-3 rounded-full font-medium hover:bg-gray-900 hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                  {loading ? 'Submitting...' : 'Submit'}
                 </button>
               </div>
             </form>
 
-            {/* Success/Error Messages */}
-            {submitStatus === 'success' && (
+            {/* Success Message */}
+            {success && (
               <div className="mt-4 md:mt-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-md">
-                <p className="text-green-800 text-xs sm:text-sm">
+                <p className="text-green-800 text-xs sm:text-sm font-medium">
                   Thank you for contacting us. Our team shall get in touch with you shortly.
                 </p>
               </div>
             )}
 
-            {submitStatus === 'error' && (
+            {/* Error Message */}
+            {error && (
               <div className="mt-4 md:mt-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-red-800 text-xs sm:text-sm">
-                  Oh no, something went wrong while submitting your request. Try again later.
+                <p className="text-red-800 text-xs sm:text-sm font-medium">
+                  {error || 'Oh no, something went wrong while submitting your request. Try again later.'}
                 </p>
               </div>
             )}

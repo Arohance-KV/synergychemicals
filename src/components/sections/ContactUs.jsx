@@ -1,16 +1,48 @@
 // src/components/sections/ContactUs.jsx
-import React, { useState } from 'react';
-import { FaWhatsapp, FaLinkedin, FaGoogle } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaWhatsapp, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import { createContact, clearError, clearSuccess } from '../../redux/contactSlice'; // Adjust path
 
 const ContactUs = () => {
+  const dispatch = useDispatch();
+  const { loading, success, error } = useSelector((state) => state.contact);
+
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
+    phoneNumber: '',
     email: '',
     message: ''
   });
 
   const [focusedInput, setFocusedInput] = useState(null);
+
+  // Clear success message after 5 seconds and reset form
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        dispatch(clearSuccess());
+        setFormData({
+          name: '',
+          phoneNumber: '',
+          email: '',
+          message: ''
+        });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, dispatch]);
+
+  // Clear errors after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        dispatch(clearError());
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, dispatch]);
 
   const handleChange = (e) => {
     setFormData({
@@ -19,9 +51,11 @@ const ContactUs = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    
+    // Dispatch the createContact action
+    await dispatch(createContact(formData));
   };
 
   return (
@@ -137,23 +171,74 @@ const ContactUs = () => {
               {/* Form Column */}
               <div className="space-y-8">
                 
+                {/* Success Message */}
+                {success && (
+                  <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-6">
+                    <div className="flex items-start">
+                      <svg className="w-5 h-5 text-green-500 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <div>
+                        <h3 className="text-green-800 font-semibold text-sm">Success!</h3>
+                        <p className="text-green-700 text-xs mt-1">Your message has been sent successfully. We'll get back to you soon!</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {error && (
+                  <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+                    <div className="flex items-start">
+                      <svg className="w-5 h-5 text-red-500 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                      <div>
+                        <h3 className="text-red-800 font-semibold text-sm">Error</h3>
+                        <p className="text-red-700 text-xs mt-1">{error}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-8">
                   
                   {/* Full Name Input */}
                   <div 
-                    className={`input-wrapper ${focusedInput === 'fullName' ? 'focused' : ''}`}
+                    className={`input-wrapper ${focusedInput === 'name' ? 'focused' : ''}`}
                   >
                     <label className="block text-sm text-gray-700 mb-2 transition-colors duration-300 hover:text-blue-600">
                       Full Name
                     </label>
                     <input
                       type="text"
-                      name="fullName"
-                      value={formData.fullName}
+                      name="name"
+                      value={formData.name}
                       onChange={handleChange}
-                      onFocus={() => setFocusedInput('fullName')}
+                      onFocus={() => setFocusedInput('name')}
                       onBlur={() => setFocusedInput(null)}
-                      className="w-full px-0 py-2 text-gray-900 bg-transparent border-b border-gray-900 focus:outline-none transition-all duration-300"
+                      disabled={loading}
+                      className="w-full px-0 py-2 text-gray-900 bg-transparent border-b border-gray-900 focus:outline-none transition-all duration-300 disabled:opacity-50"
+                      required
+                    />
+                  </div>
+
+                  {/* Phone Number Input */}
+                  <div 
+                    className={`input-wrapper ${focusedInput === 'phoneNumber' ? 'focused' : ''}`}
+                  >
+                    <label className="block text-sm text-gray-700 mb-2 transition-colors duration-300 hover:text-blue-600">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedInput('phoneNumber')}
+                      onBlur={() => setFocusedInput(null)}
+                      disabled={loading}
+                      className="w-full px-0 py-2 text-gray-900 bg-transparent border-b border-gray-900 focus:outline-none transition-all duration-300 disabled:opacity-50"
                       required
                     />
                   </div>
@@ -172,7 +257,8 @@ const ContactUs = () => {
                       onChange={handleChange}
                       onFocus={() => setFocusedInput('email')}
                       onBlur={() => setFocusedInput(null)}
-                      className="w-full px-0 py-2 text-gray-900 bg-transparent border-b border-gray-900 focus:outline-none transition-all duration-300"
+                      disabled={loading}
+                      className="w-full px-0 py-2 text-gray-900 bg-transparent border-b border-gray-900 focus:outline-none transition-all duration-300 disabled:opacity-50"
                       required
                     />
                   </div>
@@ -191,7 +277,8 @@ const ContactUs = () => {
                       onChange={handleChange}
                       onFocus={() => setFocusedInput('message')}
                       onBlur={() => setFocusedInput(null)}
-                      className="w-full px-0 py-2 text-gray-900 bg-transparent border-b border-gray-900 focus:outline-none transition-all duration-300"
+                      disabled={loading}
+                      className="w-full px-0 py-2 text-gray-900 bg-transparent border-b border-gray-900 focus:outline-none transition-all duration-300 disabled:opacity-50"
                       required
                     />
                   </div>
@@ -200,9 +287,12 @@ const ContactUs = () => {
                   <div className="pt-4">
                     <button
                       type="submit"
-                      className="group relative bg-black text-white px-10 py-3 rounded-full text-base font-medium overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                      disabled={loading}
+                      className="group relative bg-black text-white px-10 py-3 rounded-full text-base font-medium overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <span className="relative z-10">Contact Us</span>
+                      <span className="relative z-10">
+                        {loading ? 'Sending...' : 'Contact Us'}
+                      </span>
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </button>
                   </div>
@@ -213,6 +303,19 @@ const ContactUs = () => {
               {/* Contact Info Column */}
               <div className="space-y-10">
                 
+                {/* Phone Contact with hover effect */}
+                <div className="group">
+                  <h3 className="text-base font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
+                    Phone
+                  </h3>
+                  <a 
+                    href="tel:+919945107777" 
+                    className="text-gray-700 hover:text-blue-600 transition-all duration-300 inline-block hover:translate-x-2"
+                  >
+                    +91 99451 07777
+                  </a>
+                </div>
+
                 {/* Email Contact with hover effect */}
                 <div className="group">
                   <h3 className="text-base font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
@@ -257,15 +360,6 @@ const ContactUs = () => {
                   >
                     <FaLinkedin className="w-6 h-6" />
                   </a>
-                  {/*<a 
-                    href="https://google.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-gray-800 hover:text-red-600 transition-all duration-300 transform hover:scale-125 hover:-translate-y-1"
-                    aria-label="Google"
-                  >
-                    <FaGoogle className="w-6 h-6" />
-                  </a>*/}
                   <a 
                     href="https://twitter.com" 
                     target="_blank" 
