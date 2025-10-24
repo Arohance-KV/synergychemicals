@@ -9,7 +9,7 @@ const initialState = {
   error: null,
 };
 
-const BASE_URL = 'https://synergy-chemicals-server.onrender.com';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // Thunk to send the OTP (submit lead)
 export const submitLead = createAsyncThunk(

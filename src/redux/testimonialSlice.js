@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Base URL - Use Vite's import.meta.env
-const BASE_URL = 'https://synergy-chemicals-server.onrender.com';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // Initial state
 const initialState = {
