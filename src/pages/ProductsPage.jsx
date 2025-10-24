@@ -160,46 +160,63 @@ const ProductsPage = () => {
             </div>
           )}
 
-          {/* Products/Industries Grid */}
+          {/* Products/Industries Display */}
           {!loading && !error && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredData.map((item) => (
-                <div
-                  key={item.id}
-                  className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  {/* Image */}
-                  <div className="relative h-64 overflow-hidden bg-gray-100">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(item.name);
-                      }}
-                    />
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-[#32405B] mb-2 group-hover:text-[#FF6A00] transition-colors">
-                      {item.name}
-                    </h3>
-                    
-                    {/* Only show code for products */}
-                    {activeTab === 'products' && item.code && (
-                      <p className="text-sm text-gray-500">{item.code}</p>
-                    )}
-                    
-                    {/* Only show category for products */}
-                    {activeTab === 'products' && item.category && (
-                      <p className="text-xs text-gray-400 mt-2">{item.category}</p>
-                    )}
+            <div className="space-y-0">
+              {activeTab === 'products' ? (
+                // Products List Format
+                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                  <div className="divide-y divide-gray-200">
+                    {filteredData.map((item) => (
+                      <div key={item.id} className="flex justify-between items-center px-6 py-4">
+                        <span className="text-lg font-semibold text-[#32405B]">{item.name}</span>
+                        <span className="text-sm text-gray-500 font-mono">{item.code}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+              ) : (
+                // Industries Grid (unchanged)
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredData.map((item) => (
+                    <div
+                      key={item.id}
+                      className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                    >
+                      {/* Image */}
+                      <div className="relative h-64 overflow-hidden bg-gray-100">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(item.name);
+                          }}
+                        />
+                        {/* Overlay on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6">
+                        <h3 className="text-lg font-bold text-[#32405B] mb-2 group-hover:text-[#FF6A00] transition-colors">
+                          {item.name}
+                        </h3>
+                        
+                        {/* Only show code for products */}
+                        {activeTab === 'products' && item.code && (
+                          <p className="text-sm text-gray-500">{item.code}</p>
+                        )}
+                        
+                        {/* Only show category for products */}
+                        {activeTab === 'products' && item.category && (
+                          <p className="text-xs text-gray-400 mt-2">{item.category}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

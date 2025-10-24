@@ -1,11 +1,14 @@
 // src/components/Footer.jsx
 import React, { useState } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { FaWhatsapp, FaLinkedin, FaGoogle } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { Phone, Mail } from 'lucide-react';
+import { setModalOpen } from '../../redux/otpSlice';  // NEW: Use Redux for modal
 
 const Footer = () => {
+  const dispatch = useDispatch();  // NEW: Redux dispatch
   const currentYear = new Date().getFullYear();
   const location = useLocation();
   const navigate = useNavigate();
@@ -50,6 +53,21 @@ const Footer = () => {
     navigate(path);
   };
 
+  // Helper to check if OTP is already verified
+  const isOtpVerified = () => {
+    return sessionStorage.getItem('otpVerified') === 'true';
+  };
+
+  // Handle Products click - UPDATED: Use Redux dispatch like Navbar
+  const handleProductsClick = () => {
+    if (isOtpVerified()) {
+      console.log('OTP already verified, navigating directly to products');
+      handleNavigate('/products');
+    } else {
+      dispatch(setModalOpen(true));  // Open via Redux
+    }
+  };
+
   return (
     <footer className={`${theme.bg} ${theme.text} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -65,7 +83,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="https://wa.me/" 
+                href="https://wa.me/919945107777" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className={`${theme.secondaryText} hover:text-green-600 transition-colors`}
@@ -82,7 +100,7 @@ const Footer = () => {
               >
                 <FaLinkedin className="w-5 h-5" />
               </a>
-              <a 
+              {/*<a 
                 href="https://google.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
@@ -90,7 +108,7 @@ const Footer = () => {
                 aria-label="Google"
               >
                 <FaGoogle className="w-5 h-5" />
-              </a>
+              </a>*/}
               <a 
                 href="https://twitter.com" 
                 target="_blank" 
@@ -110,32 +128,40 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a 
-                  href="#sales-marketing" 
-                  className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors`}
+                <button
+                  onClick={() => handleNavigate('/services/sales-marketing')}
+                  className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors text-left`}
                 >
                   Sales & Marketing
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="#logistics" 
-                  className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors`}
-                >
-                  Logistics
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="#sourcing" 
-                  className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors`}
-                >
-                  Sourcing
-                </a>
+                </button>
               </li>
               <li>
                 <button
-                  onClick={() => handleNavigate('/products')}
+                  onClick={() => handleNavigate('/services/logistics')}
+                  className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors text-left`}
+                >
+                  Logistics
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigate('/services/sourcing')}
+                  className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors text-left`}
+                >
+                  Sourcing
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavigate('/services/product-portfolio')}
+                  className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors text-left`}
+                >
+                  Product Portfolio
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={handleProductsClick}
                   className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors text-left`}
                 >
                   Products
@@ -149,14 +175,14 @@ const Footer = () => {
                   About Us
                 </button>
               </li>
-              <li>
+              {/*<li>
                 <button
                   onClick={() => handleNavigate('/press-release')}
                   className={`${theme.secondaryText} hover:${theme.headingColor} transition-colors text-left`}
                 >
                   Blogs
                 </button>
-              </li>
+              </li>*/}
             </ul>
           </div>
 

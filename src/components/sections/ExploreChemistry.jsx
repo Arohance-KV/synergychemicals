@@ -10,13 +10,14 @@ import {
 } from '../../redux/industrySlice';
 
 const ExploreChemistry = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true); // TEMP: Start visible to bypass animation
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(3);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const sectionRef = useRef(null);
   const listRef = useRef(null);
+  const observerRef = useRef(null); // Track observer for re-use
 
   // Redux state
   const dispatch = useDispatch();
@@ -24,31 +25,45 @@ const ExploreChemistry = () => {
   const loading = useSelector(selectIndustryLoading);
   const error = useSelector(selectIndustryError);
 
+  //console.log('RENDER: Data:', industriesData?.length || 0, 'Loading:', loading, 'Error:', error); // DEBUG
+
   // Fetch industries on component mount
   useEffect(() => {
+    //console.log('MOUNT: Fetching industries...'); // DEBUG
     dispatch(fetchAllIndustries());
   }, [dispatch]);
 
+  // Observer setup
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    //console.log('MOUNT: Setting up observer'); // DEBUG
+    observerRef.current = new IntersectionObserver(
       ([entry]) => {
+        //console.log('OBSERVER: Intersecting?', entry.isIntersecting); // DEBUG
         if (entry.isIntersecting) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0 } // LOWERED: Trigger on any overlap
     );
 
     if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+      observerRef.current.observe(sectionRef.current);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (sectionRef.current && observerRef.current) {
+        observerRef.current.unobserve(sectionRef.current);
       }
     };
   }, []);
+
+  // Re-observe after data loads (helps if initial miss)
+  useEffect(() => {
+    if (industriesData.length > 0 && sectionRef.current && observerRef.current) {
+      //console.log('DATA LOAD: Re-observing for visibility'); // DEBUG
+      observerRef.current.observe(sectionRef.current);
+    }
+  }, [industriesData]);
 
   // Handle responsive items per view
   useEffect(() => {
@@ -67,28 +82,38 @@ const ExploreChemistry = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Transform API data - only use name and image
-  const industries = industriesData.map((industry, index) => {
-    // Background colors cycle
-    const bgColors = [
-      "bg-blue-50",
-      "bg-yellow-50",
-      "bg-pink-50",
-      "bg-purple-50",
-      "bg-orange-50",
-      "bg-green-50",
-      "bg-indigo-50",
-      "bg-teal-50",
-      "bg-rose-50"
-    ];
+  // Reset current index when data changes
+  useEffect(() => {
+    //console.log('DATA CHANGE: Resetting index'); // DEBUG
+    setCurrentIndex(0); // Reset to first slide on data change
+  }, [industriesData]);
 
-    return {
-      id: industry._id,
-      title: industry.name?.replace(/"/g, '') || 'Industry',
-      image: industry.image?.url || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=600&fit=crop',
-      bgColor: bgColors[index % bgColors.length]
-    };
-  });
+  // Transform API data - only use name and image
+  const industries = industriesData
+    .filter(industry => industry && industry._id) // Skip invalid items
+    .map((industry, index) => {
+      // Background colors cycle
+      const bgColors = [
+        "bg-blue-50",
+        "bg-yellow-50",
+        "bg-pink-50",
+        "bg-purple-50",
+        "bg-orange-50",
+        "bg-green-50",
+        "bg-indigo-50",
+        "bg-teal-50",
+        "bg-rose-50"
+      ];
+
+      return {
+        id: industry._id,
+        title: industry.name?.replace(/"/g, '') || 'Industry',
+        image: industry.image?.url || 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=600&fit=crop',
+        bgColor: bgColors[index % bgColors.length]
+      };
+    });
+
+  //console.log('TRANSFORM: Industries count:', industries.length); // DEBUG
 
   const totalSlides = industries.length;
   const maxIndex = Math.max(0, totalSlides - itemsPerView);
@@ -141,6 +166,7 @@ const ExploreChemistry = () => {
 
   // Loading state
   if (loading) {
+    //console.log('RENDER: Showing loading spinner'); // DEBUG
     return (
       <section className="py-12 md:py-16 lg:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -154,6 +180,7 @@ const ExploreChemistry = () => {
 
   // Error state
   if (error) {
+    //console.log('RENDER: Showing error'); // DEBUG
     return (
       <section className="py-12 md:py-16 lg:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -165,10 +192,21 @@ const ExploreChemistry = () => {
     );
   }
 
-  // No data - don't render section
+  // No data - render fallback UI (always shows section)
   if (industries.length === 0) {
-    return null;
+    //console.log('RENDER: Showing empty fallback'); // DEBUG
+    return (
+      <section className="py-12 md:py-16 lg:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-20">
+            <p className="text-gray-500">No industries available yet. Check back soon!</p>
+          </div>
+        </div>
+      </section>
+    );
   }
+
+  //console.log('RENDER: Showing main content, isVisible:', isVisible); // DEBUG
 
   return (
     <section 
@@ -182,13 +220,13 @@ const ExploreChemistry = () => {
           <div className="mb-8 md:mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               
-              {/* Title */}
+              {/* Title - TEMP: Force visible */}
               <h2 
                 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal transition-all duration-700"
                 style={{ 
                   color: '#000',
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(8px)'
+                  opacity: 1, // TEMP: Bypass isVisible
+                  transform: 'translateY(0)' // TEMP: No slide-in
                 }}
               >
                 EXPLORE CHEMISTRY BY INDUSTRY
@@ -261,8 +299,8 @@ const ExploreChemistry = () => {
                   <div 
                     className="h-full"
                     style={{
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'translateY(0)' : 'translateY(8px)',
+                      opacity: 1, // TEMP: Force visible, bypass isVisible
+                      transform: 'translateY(0)', // TEMP: No slide-in
                       transition: `all 700ms ease-out ${Math.min(index, 2) * 60}ms`
                     }}
                   >

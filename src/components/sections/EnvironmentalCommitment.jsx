@@ -1,10 +1,10 @@
 // src/components/sections/EnvironmentalCommitment.jsx
 import React, { useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const EnvironmentalCommitment = () => {
   const [activeTab, setActiveTab] = useState('environmental');
   const [isVisible, setIsVisible] = useState(false);
-
+  const navigate=useNavigate();
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -131,7 +131,8 @@ const EnvironmentalCommitment = () => {
           </div>
 
           {/* Enquire Button - Hidden on mobile, visible on tablet+ */}
-          <button className="hidden md:block px-6 py-3 border-2 border-gray-900 rounded-full text-sm font-medium text-gray-900 hover:bg-gray-900 hover:text-white hover:scale-105 transition-all duration-300 transform flex-shrink-0">
+          <button className="hidden md:block px-6 py-3 border-2 border-gray-900 rounded-full text-sm font-medium text-gray-900 hover:bg-gray-900 hover:text-white hover:scale-105 transition-all duration-300 transform flex-shrink-0"
+          onClick={()=>navigate('/contact')}>
             Enquire
           </button>
         </div>
@@ -161,7 +162,8 @@ const EnvironmentalCommitment = () => {
             )}
 
             {/* Enquire Button - Mobile version */}
-            <button className="w-full sm:w-auto px-6 py-3 border-2 border-gray-900 rounded-full text-sm font-medium text-gray-900 hover:bg-gray-900 hover:text-white hover:scale-110 transition-all duration-300 transform animate-slideInLeft animation-delay-300">
+            <button className="w-full sm:w-auto px-6 py-3 border-2 border-gray-900 rounded-full text-sm font-medium text-gray-900 hover:bg-gray-900 hover:text-white hover:scale-110 transition-all duration-300 transform animate-slideInLeft animation-delay-300"
+            onClick={()=>navigate('/contact')}>
               Enquire
             </button>
           </div>

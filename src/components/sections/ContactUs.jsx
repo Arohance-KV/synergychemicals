@@ -240,7 +240,7 @@ const ContactUs = () => {
                 {/* Social Media Icons with enhanced animations */}
                 <div className="flex items-center gap-5 pt-4">
                   <a 
-                    href="https://wa.me/" 
+                    href="https://wa.me/919945107777" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-gray-800 hover:text-green-600 transition-all duration-300 transform hover:scale-125 hover:-translate-y-1"
@@ -257,7 +257,7 @@ const ContactUs = () => {
                   >
                     <FaLinkedin className="w-6 h-6" />
                   </a>
-                  <a 
+                  {/*<a 
                     href="https://google.com" 
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -265,7 +265,7 @@ const ContactUs = () => {
                     aria-label="Google"
                   >
                     <FaGoogle className="w-6 h-6" />
-                  </a>
+                  </a>*/}
                   <a 
                     href="https://twitter.com" 
                     target="_blank" 

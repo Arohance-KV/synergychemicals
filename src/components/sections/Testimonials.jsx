@@ -1,89 +1,13 @@
 // src/components/sections/Testimonials.jsx
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { ThumbsUp, ChevronLeft, ChevronRight } from "lucide-react";
-
-const testimonials = [
-  {
-    id: 1,
-    name: "Mohit Singh",
-    role: "Production Manager",
-    company: "ABC Manufacturing",
-    content: "Synergy Chemicals has been a reliable partner for our business for years. Their commitment to quality and timely delivery has consistently helped us meet our production goals. What sets them apart is not just their products, but their proactive support and innovative approach to solving industry challenges.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 2,
-    name: "Sarah Chen",
-    role: "Operations Manager",
-    company: "TechFlow Industries",
-    content: "The quality of chemicals and the professionalism of the team at Synergy Chemicals is outstanding. They have been instrumental in helping us achieve our sustainability goals while maintaining product excellence.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 3,
-    name: "Rajesh Kumar",
-    role: "Supply Chain Director",
-    company: "Manufacturing Solutions Ltd",
-    content: "Synergy Chemicals has consistently delivered on their promises. Their technical expertise and customer service have made them our preferred chemical supplier for all our production needs.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 4,
-    name: "Emily Watson",
-    role: "Quality Assurance Head",
-    company: "Global Pharma Corp",
-    content: "Working with Synergy Chemicals has transformed our quality standards. Their products meet international specifications consistently, and their documentation is always impeccable.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 5,
-    name: "David Martinez",
-    role: "Plant Manager",
-    company: "Industrial Solutions Inc",
-    content: "The technical support team at Synergy Chemicals is exceptional. They helped us optimize our processes and reduce waste significantly. Their commitment to customer success is evident in everything they do.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 6,
-    name: "Priya Sharma",
-    role: "Procurement Head",
-    company: "MetalTech Industries",
-    content: "Synergy Chemicals stands out for their reliability and competitive pricing. They have never let us down, even during challenging times. Their logistics and supply chain management is world-class.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 7,
-    name: "John Anderson",
-    role: "R&D Director",
-    company: "ChemCore Research",
-    content: "The innovation and product development support from Synergy Chemicals has been invaluable to our research projects. They truly understand the needs of the modern chemical industry.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 8,
-    name: "Lisa Thompson",
-    role: "Operations Director",
-    company: "Pacific Manufacturing",
-    content: "Partnering with Synergy Chemicals was one of our best business decisions. Their product quality, timely delivery, and excellent customer service have exceeded our expectations consistently.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 9,
-    name: "Ahmed Hassan",
-    role: "Production Supervisor",
-    company: "Arabian Industries",
-    content: "Synergy Chemicals provides exceptional products at competitive prices. Their team is always available to address our concerns and provide technical guidance whenever needed.",
-    avatar: "/assets/testimonial-1.jpg"
-  },
-  {
-    id: 10,
-    name: "Maria Garcia",
-    role: "Quality Control Manager",
-    company: "European Chemicals Ltd",
-    content: "The consistency in quality and the comprehensive technical support makes Synergy Chemicals our go-to supplier. They have helped us maintain our high standards across all our production lines.",
-    avatar: "/assets/testimonial-1.jpg"
-  }
-];
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  fetchAllTestimonials,
+  selectAllTestimonials,
+  selectTestimonialLoading,
+  selectTestimonialError
+} from '../../redux/testimonialSlice';
 
 const CircularTestimonialCard = React.memo(({
   testimonial, index, currentIndex, totalItems, isMobile
@@ -129,7 +53,7 @@ const CircularTestimonialCard = React.memo(({
             alt={testimonial.name}
             className={`${isMobile ? 'w-12 h-12' : 'w-16 h-16'} rounded-full border-4 border-white shadow-lg object-cover`}
             onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/150';
+              e.target.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(testimonial.name) + '&background=FF6A00&color=fff';
             }}
           />
         </div>
@@ -154,11 +78,35 @@ export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const scrollAccumulator = useRef(0);
-  const total = testimonials.length;
   const autoScrollRef = useRef();
   const isUserInteracting = useRef(false);
   const scrollTimeout = useRef();
   const [isAutoScrollSuspended, setIsAutoScrollSuspended] = useState(false);
+
+  // Redux state
+  const dispatch = useDispatch();
+  const testimonialsData = useSelector(selectAllTestimonials);
+  const loading = useSelector(selectTestimonialLoading);
+  const error = useSelector(selectTestimonialError);
+
+  // Fetch testimonials on mount
+  useEffect(() => {
+    dispatch(fetchAllTestimonials());
+  }, [dispatch]);
+
+  // Transform API data to match component structure
+  const testimonials = useMemo(() => {
+    return testimonialsData.map(testimonial => ({
+      id: testimonial._id,
+      name: testimonial.name?.replace(/"/g, '') || 'Anonymous',
+      role: testimonial.title?.replace(/"/g, '') || '',
+      company: '', // API doesn't have company field
+      content: testimonial.description?.replace(/"/g, '') || '',
+      avatar: testimonial.profileImgUrl?.url || 'https://via.placeholder.com/150'
+    }));
+  }, [testimonialsData]);
+
+  const total = testimonials.length;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -329,6 +277,41 @@ export default function Testimonials() {
     scrollAccumulator.current = index * 100;
   }, []);
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="w-full">
+        <section className="w-full min-h-screen bg-white py-20 px-4 overflow-hidden relative">
+          <div className="quarter-circle-bottom-left" />
+          <div className="quarter-circle-top-right" />
+          <div className="max-w-7xl mx-auto relative z-10 flex items-center justify-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FF6A00]"></div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="w-full">
+        <section className="w-full min-h-screen bg-white py-20 px-4 overflow-hidden relative">
+          <div className="quarter-circle-bottom-left" />
+          <div className="quarter-circle-top-right" />
+          <div className="max-w-7xl mx-auto relative z-10 flex items-center justify-center min-h-[400px]">
+            <p className="text-red-600">Error loading testimonials: {error}</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Don't render if no testimonials
+  if (testimonials.length === 0) {
+    return null;
+  }
+
   return (
     <div className="w-full">
       <style>{`
@@ -401,10 +384,10 @@ export default function Testimonials() {
         ref={sectionRef}
         className="w-full min-h-screen bg-white py-20 px-4 overflow-hidden relative"
       >
-        {/* Bottom Left Quarter Circle - 480px radius */}
+        {/* Bottom Left Quarter Circle */}
         <div className="quarter-circle-bottom-left" />
 
-        {/* Top Right Quarter Circle - 180px radius */}
+        {/* Top Right Quarter Circle */}
         <div className="quarter-circle-top-right" />
 
         <div className="max-w-7xl mx-auto relative z-10">

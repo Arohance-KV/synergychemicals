@@ -1,8 +1,9 @@
 // src/components/sections/ContactSection.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Send } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 const ContactSection = () => {
+  const navigate= useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -129,7 +130,8 @@ const ContactSection = () => {
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
-                <button className="bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 sm:py-3.5 sm:px-8 md:py-4 md:px-10 rounded-full font-bold transition-all duration-300 flex items-center gap-2 sm:gap-3 group text-base sm:text-lg md:text-xl mx-auto shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95">
+                <button className="bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 sm:py-3.5 sm:px-8 md:py-4 md:px-10 rounded-full font-bold transition-all duration-300 flex items-center gap-2 sm:gap-3 group text-base sm:text-lg md:text-xl mx-auto shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95"
+                onClick={()=>navigate('/contact')}>
                   <span>Contact Us</span>
                   <Send className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
