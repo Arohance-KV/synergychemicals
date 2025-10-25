@@ -335,8 +335,7 @@ const ContactUs = () => {
                     Based in
                   </h3>
                   <p className="text-gray-700 group-hover:text-gray-900 transition-colors duration-300">
-                    Los Angeles,<br />
-                    California
+                    C-01, Solus no.2,<br /> 1st cross, JC road,<br /> Bengaluru-27
                   </p>
                 </div>
 

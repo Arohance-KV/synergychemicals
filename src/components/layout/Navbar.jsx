@@ -337,7 +337,7 @@ const Navbar = () => {
                 <p className="text-sm font-semibold text-gray-600 mb-4">CONNECT WITH US</p>
                 <div className="flex space-x-6">
                   <a 
-                    href="https://wa.me/919923131311" 
+                    href="https://wa.me/919945107777" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-gray-600 cursor-pointer hover:text-green-500 transition-colors"

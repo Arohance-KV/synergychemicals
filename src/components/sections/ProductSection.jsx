@@ -77,8 +77,10 @@ const ProductSection = () => {
     }
   ];
 
-  // Use fallback if error, empty, or flag set
-  const displayProducts = useFallback || error || (products && products.length === 0) ? fallbackProducts : products;
+  // Use fallback if error, empty, or flag set; otherwise, limit to top 3 products
+  const displayProducts = useFallback || error || !products || products.length === 0 
+    ? fallbackProducts 
+    : products.slice(0, 3);
 
   // Helper to check if OTP is verified
   const isOtpVerified = () => {
